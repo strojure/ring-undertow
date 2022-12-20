@@ -6,3 +6,9 @@ Clojure ring adapter to Undertow web server.
 [![Clojars Project](https://img.shields.io/clojars/v/com.github.strojure/ring-undertow.svg)](https://clojars.org/com.github.strojure/ring-undertow)
 
 ## Motivation
+
+- Performant implementation of the Ring handler concept.
+- Lazy evaluation of request keys which are slow to compute but probably never
+  used.
+- Adopt features provided by underlying Undertow server, like sessions,
+  websockets or multiple handlers on single server instance.
