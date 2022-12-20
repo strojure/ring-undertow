@@ -10,7 +10,7 @@
   "True if sessions are enabled in Undertow server configuration. When sessions
   are disabled then attempts to set :session keys will raise exception."
   [req]
-  (some-> req :undertow/exchange exchange/sessions-enabled?))
+  (some-> req :server-exchange exchange/sessions-enabled?))
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 

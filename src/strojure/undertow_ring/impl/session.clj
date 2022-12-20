@@ -42,6 +42,6 @@
                                                (.getAttribute session ring-session-key))))
     (when entries
       (throw (ex-info "Attempt to put session entries when sessions are disabled"
-                      {:undertow/exchange exchange})))))
+                      {:server-exchange exchange})))))
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,

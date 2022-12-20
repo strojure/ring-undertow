@@ -81,8 +81,9 @@
         session (session/get-session e)
         body (exchange/get-input-stream e)]
     (-> (.asTransient PersistentHashMap/EMPTY)
-        ;; TODO: Decide about keyword for server exchange
-        (.assoc :undertow/exchange e)
+        ;; Adapter specific request keys.
+        (.assoc :server-exchange e)
+        ;; Standard ring request keys.
         (.assoc :server-port,,, (zmap/delay (.getPort (.getDestinationAddress e))))
         (.assoc :server-name,,, (zmap/delay (.getHostName e)))
         (.assoc :remote-addr,,, (zmap/delay (.getHostAddress (.getAddress (.getSourceAddress e)))))
@@ -90,11 +91,12 @@
         (.assoc :scheme,,,,,,,, (scheme-keyword (.getRequestScheme e)))
         (.assoc :request-method (method-keyword (.toString (.getRequestMethod e))))
         (.assoc :headers,,,,,,, (headers/header-map-proxy (.getRequestHeaders e)))
+        ;; Optional ring request keys.
         (cond->
-          query-string,,, (.assoc :query-string query-string)
-          context,,,,,,,, (.assoc :context context)
-          session,,,,,,,, (.assoc :session session)
-          body,,,,,,,,,,, (.assoc :body body))
+          query-string (.assoc :query-string query-string)
+          context,,,,, (.assoc :context context)
+          session,,,,, (.assoc :session session)
+          body,,,,,,,, (.assoc :body body))
         (.persistent)
         (zmap/wrap))))
 
