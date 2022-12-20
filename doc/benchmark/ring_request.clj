@@ -1,5 +1,6 @@
 (ns benchmark.ring-request
-  (:require [immutant.web.internal.ring :as immutant]
+  (:require [clj-http.client :as client]
+            [immutant.web.internal.ring :as immutant]
             [immutant.web.internal.undertow]
             [ring.adapter.undertow.request :as luminus]
             [strojure.ring-undertow.impl.request :as impl]
@@ -13,25 +14,27 @@
 
 (declare ^:private -exchange)
 
-(defonce ^:private server! (atom nil))
-
 (def ^:private -handler
   (reify HttpHandler
     (handleRequest [_ exchange]
       #_:clj-kondo/ignore
       (def ^HttpServerExchange -exchange exchange))))
 
-(defn- server-start []
-  (reset! server! (server/start {:port 9080 :handler -handler})))
+(def ^:private -request-headers
+  {"User-Agent",,,,, "Mozilla /5.0 (Windows NT 10.0 ; Win64; x64; rv:107.0) Gecko/20100101 Firefox/107.0"
+   "Accept",,,,,,,,, "text/html, application/xhtml+xml, application/xml ;q=0.9,image/avif,image/webp,*/*;q=0.8"
+   "Accept-Language" "ru, en ;q=0.8,de;q=0.6,uk;q=0.4,be;q=0.2"
+   "Accept-Encoding" "gzip, deflate, br"
+   "Connection",,,,, "keep-alive"
+   "Cookie",,,,,,,,, "secret=dfe83f04-2d13-4914-88dd-5005ac317936"
+   "Upgrade-Insecure-Requests" "1"})
 
-(defn- server-stop []
-  (swap! server! #(some-> % server/stop)))
-
-(comment
-  (server-start)
-  ;; Execute request in ./ring_request.http
-  (server-stop)
-  )
+(let [server (server/start {:port 9080 :handler -handler})]
+  (try
+    (client/get "http://localhost:9080/?param=value" {:headers -request-headers})
+    (println "\nServer exchange:" -exchange "\n")
+    (finally
+      (server/stop server))))
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
