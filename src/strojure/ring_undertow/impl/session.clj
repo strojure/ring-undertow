@@ -1,4 +1,4 @@
-(ns strojure.undertow-ring.impl.session
+(ns strojure.ring-undertow.impl.session
   "Implementation of ring sessions."
   (:require [strojure.undertow.api.exchange :as exchange]))
 

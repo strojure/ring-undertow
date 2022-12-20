@@ -1,7 +1,7 @@
-(ns strojure.undertow-ring.adapter
+(ns strojure.ring-undertow.adapter
   "Ring adapter to coerce Clojure functions to Undertow server handlers."
-  (:require [strojure.undertow-ring.impl.request :as request]
-            [strojure.undertow-ring.impl.response :as response]
+  (:require [strojure.ring-undertow.impl.request :as request]
+            [strojure.ring-undertow.impl.response :as response]
             [strojure.undertow.api.exchange :as exchange]
             [strojure.undertow.handler :as handler]
             [strojure.undertow.server :as server])

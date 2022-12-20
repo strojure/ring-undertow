@@ -1,9 +1,9 @@
-(ns strojure.undertow-ring.adapter.non-blocking
+(ns strojure.ring-undertow.adapter.non-blocking
   "Experimental adapter for synchronous non-blocking ring handler executed on IO
   thread."
-  (:require [strojure.undertow-ring.adapter :as adapter]
-            [strojure.undertow-ring.impl.request :as request]
-            [strojure.undertow-ring.impl.response :as response])
+  (:require [strojure.ring-undertow.adapter :as adapter]
+            [strojure.ring-undertow.impl.request :as request]
+            [strojure.ring-undertow.impl.response :as response])
   (:import (io.undertow.server HttpHandler)))
 
 (set! *warn-on-reflection* true)

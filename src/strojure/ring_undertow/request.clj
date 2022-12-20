@@ -1,4 +1,4 @@
-(ns strojure.undertow-ring.request
+(ns strojure.ring-undertow.request
   "Ring request helper functions."
   (:require [strojure.undertow.api.exchange :as exchange]))
 

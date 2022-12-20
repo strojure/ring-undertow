@@ -1,4 +1,4 @@
-(ns strojure.undertow-ring.impl.headers
+(ns strojure.ring-undertow.impl.headers
   "Implementation of persistent map proxy over Undertow request headers."
   (:require [clojure.string :as string])
   (:import (clojure.lang APersistentMap IEditableCollection IFn IKVReduce

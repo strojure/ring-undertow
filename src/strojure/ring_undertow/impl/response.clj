@@ -1,7 +1,7 @@
-(ns strojure.undertow-ring.impl.response
+(ns strojure.ring-undertow.impl.response
   "Ring response implementation."
   (:require [clojure.java.io :as io]
-            [strojure.undertow-ring.impl.session :as session]
+            [strojure.ring-undertow.impl.session :as session]
             [strojure.undertow.api.exchange :as exchange])
   (:import (clojure.lang Associative ISeq)
            (io.undertow.io Sender)

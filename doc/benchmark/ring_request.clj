@@ -2,7 +2,7 @@
   (:require [immutant.web.internal.ring :as immutant]
             [immutant.web.internal.undertow]
             [ring.adapter.undertow.request :as luminus]
-            [strojure.undertow-ring.impl.request :as impl]
+            [strojure.ring-undertow.impl.request :as impl]
             [strojure.undertow.server :as server]
             [strojure.zmap.core :as zmap])
   (:import (io.undertow.server HttpHandler HttpServerExchange)))

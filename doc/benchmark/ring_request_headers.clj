@@ -2,7 +2,7 @@
   (:require [immutant.web.internal.headers :as immutant]
             [immutant.web.internal.undertow]
             [ring.adapter.undertow.headers :as luminus]
-            [strojure.undertow-ring.impl.headers :as impl]
+            [strojure.ring-undertow.impl.headers :as impl]
             [strojure.undertow.api.exchange :as exchange])
   (:import (io.undertow.util HeaderMap)))
 

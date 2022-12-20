@@ -1,7 +1,7 @@
-(ns strojure.undertow-ring.impl.request
+(ns strojure.ring-undertow.impl.request
   "Ring request implementation."
-  (:require [strojure.undertow-ring.impl.headers :as headers]
-            [strojure.undertow-ring.impl.session :as session]
+  (:require [strojure.ring-undertow.impl.headers :as headers]
+            [strojure.ring-undertow.impl.session :as session]
             [strojure.undertow.api.exchange :as exchange]
             [strojure.zmap.core :as zmap])
   (:import (clojure.lang PersistentHashMap)
