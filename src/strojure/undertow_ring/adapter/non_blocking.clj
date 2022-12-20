@@ -1,4 +1,6 @@
 (ns strojure.undertow-ring.adapter.non-blocking
+  "Experimental adapter for synchronous non-blocking ring handler executed on IO
+  thread."
   (:require [strojure.undertow-ring.adapter :as adapter]
             [strojure.undertow-ring.impl.ring-request :as ring-request]
             [strojure.undertow-ring.impl.ring-response :as ring-response])
@@ -9,6 +11,8 @@
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
 (defn as-non-blocking-sync-handler
+  "Adds metadata to the function `handler` to be called as non-blocking
+  synchronous ring handler on IO thread."
   [handler]
   (vary-meta handler assoc ::adapter/handler-type ::sync-non-blocking-handler))
 

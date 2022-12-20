@@ -1,4 +1,5 @@
 (ns strojure.undertow-ring.request
+  "Ring request helper functions."
   (:require [strojure.undertow.api.exchange :as exchange]))
 
 (set! *warn-on-reflection* true)

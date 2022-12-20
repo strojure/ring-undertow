@@ -1,4 +1,5 @@
 (ns strojure.undertow-ring.impl.ring-request
+  "Ring request implementation."
   (:require [strojure.undertow-ring.impl.request-headers :as headers]
             [strojure.undertow-ring.impl.session :as session]
             [strojure.undertow.api.exchange :as exchange]
@@ -52,7 +53,26 @@
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
 (defn build-request
-  ;; TODO: Refer to https://github.com/ring-clojure/ring/wiki/Concepts#requests
+  "Returns [ring request map][1] for given server exchange.
+
+  - Does not contain deprecated keys.
+
+  - The `:headers` is a persistent map proxy interface over Undertow header map.
+    Header names are case-insensitive. The proxy is converted to Clojure map on
+    updates.
+
+  - The request map itself is a lazy map (zmap) over `PersistentHashMap` with
+    some values delayed.
+
+  - The `:session` key is provided when session data is not empty. No additional
+    middleware is required for sessions, but only proper configuration of the
+    Undertow server.
+
+  - The `:body` is only provided in incomplete request with not consumed input
+    stream.
+
+  [1]: https://github.com/ring-clojure/ring/wiki/Concepts#requests
+  "
   [^HttpServerExchange e]
   (let [query-string (.getQueryString e)
         query-string (when-not (.isEmpty query-string) query-string)
@@ -61,6 +81,7 @@
         session (session/get-session e)
         body (exchange/get-input-stream e)]
     (-> (.asTransient PersistentHashMap/EMPTY)
+        ;; TODO: Decide about keyword for server exchange
         (.assoc :undertow/exchange e)
         (.assoc :server-port,,, (zmap/delay (.getPort (.getDestinationAddress e))))
         (.assoc :server-name,,, (zmap/delay (.getHostName e)))

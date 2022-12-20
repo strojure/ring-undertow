@@ -1,4 +1,5 @@
 (ns strojure.undertow-ring.impl.request-headers
+  "Implementation of persistent map proxy over Undertow exchange headers."
   (:require [clojure.string :as string])
   (:import (clojure.lang APersistentMap IEditableCollection IFn IKVReduce
                          IPersistentMap MapEntry MapEquivalence RT Util)
@@ -9,11 +10,11 @@
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-(defn header-name
+(defn- header-name
   [^HeaderValues x]
   (.toLowerCase (.toString (.getHeaderName x))))
 
-(defn header-value
+(defn- header-value
   [^HeaderValues x]
   (if (< 1 (.size x))
     ;; Comma separated values.
@@ -25,10 +26,12 @@
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
 (defprotocol PersistentMap
-  (as-persistent-map ^APersistentMap [_]))
+  (to-persistent-map
+    ^APersistentMap [obj]
+    "Converts `obj` to persistent map."))
 
 (extend-protocol PersistentMap HeaderMap
-  (as-persistent-map
+  (to-persistent-map
     [headers]
     (persistent! (reduce (fn [m! x] (assoc! m! (header-name x) (header-value x)))
                          (transient {})
@@ -68,21 +71,21 @@
     (.contains headers (str k)))
   (assoc
     [this k v]
-    (-> (as-persistent-map this)
-        (assoc k v)))
+    (-> (to-persistent-map this)
+        (.assoc k v)))
   (assocEx
     [this k v]
     (if (.containsKey this k)
       (throw (Util/runtimeException "Key already present"))
-      (assoc this k v)))
+      (.assoc this k v)))
   (cons
     [this o]
-    (-> (as-persistent-map this)
-        (conj o)))
+    (-> (to-persistent-map this)
+        (.cons o)))
   (without
     [this k]
-    (-> (as-persistent-map this)
-        (dissoc (.toLowerCase (str k)))))
+    (-> (to-persistent-map this)
+        (.without (.toLowerCase (str k)))))
   (empty
     [_]
     {})
@@ -91,26 +94,26 @@
     (.size headers))
   (seq
     [this]
-    (seq (as-persistent-map this)))
+    (.seq (to-persistent-map this)))
   (equiv
     [this o]
-    (= o (as-persistent-map this)))
+    (= o (to-persistent-map this)))
   (iterator
     [this]
-    (.iterator (as-persistent-map this)))
+    (.iterator (to-persistent-map this)))
   IKVReduce
   (kvreduce
     [this f init]
-    (.kvreduce ^IKVReduce (as-persistent-map this) f init))
+    (.kvreduce ^IKVReduce (to-persistent-map this) f init))
   IEditableCollection
   (asTransient
     [this]
-    (transient (as-persistent-map this)))
+    (transient (to-persistent-map this)))
   PersistentMap
-  (as-persistent-map
+  (to-persistent-map
     [_]
     (or persistent-copy
-        (set! persistent-copy (as-persistent-map headers))))
+        (set! persistent-copy (to-persistent-map headers))))
   Object
   (toString
     [this]
@@ -119,6 +122,7 @@
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
 (defn ring-headers
+  "Returns persistent map proxy instance over Undertow's header map."
   [header-map]
   (HeaderMapProxy. header-map nil))
 
