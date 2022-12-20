@@ -1,6 +1,6 @@
-(ns strojure.undertow-ring.impl.ring-request
+(ns strojure.undertow-ring.impl.request
   "Ring request implementation."
-  (:require [strojure.undertow-ring.impl.request-headers :as headers]
+  (:require [strojure.undertow-ring.impl.headers :as headers]
             [strojure.undertow-ring.impl.session :as session]
             [strojure.undertow.api.exchange :as exchange]
             [strojure.zmap.core :as zmap])
@@ -89,7 +89,7 @@
         (.assoc :uri,,,,,,,,,,, (.getRequestURI e))
         (.assoc :scheme,,,,,,,, (scheme-keyword (.getRequestScheme e)))
         (.assoc :request-method (method-keyword (.toString (.getRequestMethod e))))
-        (.assoc :headers,,,,,,, (headers/ring-headers (.getRequestHeaders e)))
+        (.assoc :headers,,,,,,, (headers/header-map-proxy (.getRequestHeaders e)))
         (cond->
           query-string,,, (.assoc :query-string query-string)
           context,,,,,,,, (.assoc :context context)

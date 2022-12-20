@@ -1,5 +1,5 @@
-(ns strojure.undertow-ring.impl.request-headers
-  "Implementation of persistent map proxy over Undertow exchange headers."
+(ns strojure.undertow-ring.impl.headers
+  "Implementation of persistent map proxy over Undertow request headers."
   (:require [clojure.string :as string])
   (:import (clojure.lang APersistentMap IEditableCollection IFn IKVReduce
                          IPersistentMap MapEntry MapEquivalence RT Util)
@@ -10,11 +10,11 @@
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-(defn- header-name
+(defn- ring-header-name
   [^HeaderValues x]
   (.toLowerCase (.toString (.getHeaderName x))))
 
-(defn- header-value
+(defn- ring-header-value
   [^HeaderValues x]
   (if (< 1 (.size x))
     ;; Comma separated values.
@@ -33,7 +33,7 @@
 (extend-protocol PersistentMap HeaderMap
   (to-persistent-map
     [headers]
-    (persistent! (reduce (fn [m! x] (assoc! m! (header-name x) (header-value x)))
+    (persistent! (reduce (fn [m! x] (assoc! m! (ring-header-name x) (ring-header-value x)))
                          (transient {})
                          headers))))
 
@@ -49,18 +49,18 @@
   IFn
   (invoke
     [_ k]
-    (some-> (.get headers (str k)) header-value))
+    (some-> (.get headers (str k)) ring-header-value))
   (invoke
     [_ k not-found]
-    (or (some-> (.get headers (str k)) header-value)
+    (or (some-> (.get headers (str k)) ring-header-value)
         not-found))
   IPersistentMap
   (valAt
     [_ k]
-    (some-> (.get headers (str k)) header-value))
+    (some-> (.get headers (str k)) ring-header-value))
   (valAt
     [_ k not-found]
-    (or (some-> (.get headers (str k)) header-value)
+    (or (some-> (.get headers (str k)) ring-header-value)
         not-found))
   (entryAt
     [this k]
@@ -121,7 +121,7 @@
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-(defn ring-headers
+(defn header-map-proxy
   "Returns persistent map proxy instance over Undertow's header map."
   [header-map]
   (HeaderMapProxy. header-map nil))

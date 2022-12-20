@@ -1,8 +1,8 @@
-(ns benchmark.request-headers
+(ns benchmark.ring-request-headers
   (:require [immutant.web.internal.headers :as immutant]
             [immutant.web.internal.undertow]
             [ring.adapter.undertow.headers :as luminus]
-            [strojure.undertow-ring.impl.request-headers :as impl]
+            [strojure.undertow-ring.impl.headers :as impl]
             [strojure.undertow.api.exchange :as exchange])
   (:import (io.undertow.util HeaderMap)))
 
@@ -40,7 +40,7 @@
 
 ;;; Smaller header map.
 
-(impl/ring-headers -headers-7)
+(impl/header-map-proxy -headers-7)
 ;             Execution time mean : 12,595231 ns
 ;    Execution time std-deviation : 0,637142 ns
 ;   Execution time lower quantile : 11,948979 ns ( 2,5%)
@@ -62,7 +62,7 @@
 
 ;;; Larger header map
 
-(impl/ring-headers -headers-9)
+(impl/header-map-proxy -headers-9)
 ;             Execution time mean : 12,977983 ns
 ;    Execution time std-deviation : 0,432929 ns
 ;   Execution time lower quantile : 12,508952 ns ( 2,5%)
@@ -84,7 +84,7 @@
 
 ;;; Get header value + conversion
 
-(-> (impl/ring-headers -headers-9)
+(-> (impl/header-map-proxy -headers-9)
     (get "cookie"))
 ;             Execution time mean : 33,047773 ns
 ;    Execution time std-deviation : 1,031752 ns

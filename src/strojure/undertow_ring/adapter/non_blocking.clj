@@ -2,8 +2,8 @@
   "Experimental adapter for synchronous non-blocking ring handler executed on IO
   thread."
   (:require [strojure.undertow-ring.adapter :as adapter]
-            [strojure.undertow-ring.impl.ring-request :as ring-request]
-            [strojure.undertow-ring.impl.ring-response :as ring-response])
+            [strojure.undertow-ring.impl.request :as request]
+            [strojure.undertow-ring.impl.response :as response])
   (:import (io.undertow.server HttpHandler)))
 
 (set! *warn-on-reflection* true)
@@ -25,8 +25,8 @@
         ;; Dispatch incomplete request to worker thread
         (.dispatch e this)
         ;; Execute handler on IO thread
-        (-> (ring-request/build-request e)
+        (-> (request/build-request e)
             (handler)
-            (ring-response/handle-response e))))))
+            (response/handle-response e))))))
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,

@@ -1,4 +1,4 @@
-(ns strojure.undertow-ring.impl.ring-response
+(ns strojure.undertow-ring.impl.response
   "Ring response implementation."
   (:require [clojure.java.io :as io]
             [strojure.undertow-ring.impl.session :as session]

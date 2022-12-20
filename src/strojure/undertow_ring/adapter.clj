@@ -1,7 +1,7 @@
 (ns strojure.undertow-ring.adapter
   "Ring adapter to coerce Clojure functions to Undertow server handlers."
-  (:require [strojure.undertow-ring.impl.ring-request :as ring-request]
-            [strojure.undertow-ring.impl.ring-response :as ring-response]
+  (:require [strojure.undertow-ring.impl.request :as request]
+            [strojure.undertow-ring.impl.response :as response]
             [strojure.undertow.api.exchange :as exchange]
             [strojure.undertow.handler :as handler]
             [strojure.undertow.server :as server])
@@ -26,9 +26,9 @@
   (handler/force-dispatch
     (reify HttpHandler
       (handleRequest [_ exchange]
-        (-> (ring-request/build-request exchange)
+        (-> (request/build-request exchange)
             (ring-handler)
-            (ring-response/handle-response exchange))))))
+            (response/handle-response exchange))))))
 
 ;; Handlers may also be **asynchronous**. Handlers of this type take three
 ;; arguments: the request map, a response callback and an exception callback.
@@ -38,8 +38,8 @@
   (reify HttpHandler
     (handleRequest [_ exchange]
       (exchange/async-dispatch exchange
-        (ring-handler (ring-request/build-request exchange)
-                      (fn handle-async [response] (ring-response/handle-response response exchange))
+        (ring-handler (request/build-request exchange)
+                      (fn handle-async [response] (response/handle-response response exchange))
                       (partial exchange/async-throw exchange))))))
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
