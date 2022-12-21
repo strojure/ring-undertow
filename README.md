@@ -101,7 +101,7 @@ functions. See server configuration documentation in [Undertow server API].
 
 ;; Asynchronous ring handler - adapter in configuration
 
-(run {:handler ring-handler, :server/handler-fn-adapter handler/async-ring-handler})
+(run {:handler ring-handler, :handler-fn-adapter handler/async-ring-handler})
 ;=> "Hello from localhost (async)"
 
 
