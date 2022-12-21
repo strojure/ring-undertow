@@ -1,4 +1,4 @@
-(defproject com.github.strojure/ring-undertow "1.0.17-beta.2"
+(defproject com.github.strojure/ring-undertow "1.0.18-SNAPSHOT"
   :description "Clojure ring adapter to Undertow web server."
   :url "https://github.com/strojure/ring-undertow"
   :license {:name "The MIT License" :url "http://opensource.org/licenses/MIT"}
