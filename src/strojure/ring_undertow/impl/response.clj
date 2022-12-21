@@ -117,7 +117,7 @@
       + Additional body types:
           - `ByteBuffer`  Similar to `String` but response charset is not used.
           - `HttpHandler` The Undertow handler in the `:body` is handled, this
-                          allows to initiate such processing like websocket handshake.
+                          allows to initiate processing like websocket handshake.
       + Custom body types can be added by extending [[ResponseBody]] protocol.
 
   [1]: https://github.com/ring-clojure/ring/wiki/Concepts#responses
