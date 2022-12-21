@@ -4,9 +4,10 @@
             [immutant.web.internal.undertow]
             [ring.adapter.undertow.request :as luminus]
             [strojure.ring-undertow.impl.request :as impl]
+            [strojure.undertow.handler :as handler]
             [strojure.undertow.server :as server]
             [strojure.zmap.core :as zmap])
-  (:import (io.undertow.server HttpHandler HttpServerExchange)))
+  (:import (io.undertow.server HttpServerExchange)))
 
 (set! *warn-on-reflection* true)
 
@@ -15,8 +16,8 @@
 (declare ^:private -exchange)
 
 (def ^:private -handler
-  (reify HttpHandler
-    (handleRequest [_ exchange]
+  (handler/exchange-fn
+    (fn [exchange]
       #_:clj-kondo/ignore
       (def ^HttpServerExchange -exchange exchange))))
 
@@ -29,12 +30,9 @@
    "Cookie",,,,,,,,, "secret=dfe83f04-2d13-4914-88dd-5005ac317936"
    "Upgrade-Insecure-Requests" "1"})
 
-(let [server (server/start {:port 9080 :handler -handler})]
-  (try
-    (client/get "http://localhost:9080/?param=value" {:headers -request-headers})
-    (println "\nServer exchange:" -exchange "\n")
-    (finally
-      (server/stop server))))
+(with-open [_ (-> {:handler -handler :port 9080} (server/start) (server/closeable))]
+  (client/get "http://localhost:9080/?param=value" {:headers -request-headers})
+  (println "\nServer exchange:" -exchange "\n"))
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
