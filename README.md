@@ -122,6 +122,34 @@ functions. See server configuration documentation in [Undertow server API].
 ;=> "Hello from localhost (async)"
 ```
 
+### Websockets
+
+Websocket server handler can be setup without involving ring handlers like
+described in [Undertow server API].
+
+But it is also possible to return websocket handler in response `:body` to
+establish websocket connection.
+
+```clojure
+(ns usage.websockets
+  (:require
+    [strojure.ring-undertow.request :as request]
+    [strojure.undertow.handler :as handler]
+    [strojure.undertow.websocket.channel :as channel]))
+
+(defn on-message
+  "Websocket callback."
+  [{:keys [channel text]}]
+  (channel/send-text (str "Received: " text) channel nil))
+
+(defn ring-handler
+  "Ring handler initiating websocket connection."
+  [request]
+  (if (request/websocket? request)
+    {:body (handler/websocket {:on-message on-message})}
+    {:status 404}))
+```
+
 ### Request utility
 
 There are some utility functions to get information from ring requests which is
