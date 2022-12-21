@@ -12,3 +12,8 @@ Clojure ring adapter to Undertow web server.
   used.
 - Adopt features provided by underlying Undertow server, like sessions,
   websockets or multiple handlers on single server instance.
+
+## Benchmarks
+
+- [request](doc/benchmark/ring_request.clj)
+- [headers](doc/benchmark/ring_request_headers.clj)
