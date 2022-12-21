@@ -1,8 +1,6 @@
-(ns strojure.ring-undertow.adapter.non-blocking
-  "Experimental adapter for synchronous non-blocking ring handler executed on IO
-  thread."
-  (:require [strojure.ring-undertow.adapter :as adapter]
-            [strojure.ring-undertow.impl.request :as request]
+(ns strojure.ring-undertow.handler.non-blocking
+  "Experimental synchronous non-blocking ring handler executed on IO thread."
+  (:require [strojure.ring-undertow.impl.request :as request]
             [strojure.ring-undertow.impl.response :as response])
   (:import (io.undertow.server HttpHandler)))
 
@@ -10,14 +8,13 @@
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-(defn as-non-blocking-sync-handler
-  "Adds metadata to the function `handler` to be called as non-blocking
-  synchronous ring handler on IO thread."
-  [handler]
-  (vary-meta handler assoc ::adapter/handler-type ::sync-non-blocking-handler))
+(defn sync-ring-handler
+  "Returns HttpHandler for **synchronous** ring handler function executed *on IO
+  thread*.
 
-(defmethod adapter/handler-fn-adapter ::sync-non-blocking-handler
-  [handler]
+  The function `handler-fn` takes one argument, a map representing a HTTP
+  request, and return a map representing the HTTP response."
+  [handler-fn]
   (reify HttpHandler
     (handleRequest [this e]
       (if (and (.isInIoThread e)
@@ -26,7 +23,7 @@
         (.dispatch e this)
         ;; Execute handler on IO thread
         (-> (request/build-request e)
-            (handler)
+            (handler-fn)
             (response/handle-response e))))))
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
