@@ -41,14 +41,12 @@
 
 ;; Synchronous ring handler - adapter in configuration
 
-(run {:handler ring-handler
-      ::server/handler-fn-adapter handler/sync-ring-handler})
+(run {:handler ring-handler, :handler-fn-adapter handler/sync-ring-handler})
 ;=> "Hello from localhost (sync)"
 
 ;; Asynchronous ring handler - adapter in configuration
 
-(run {:handler ring-handler
-      ::server/handler-fn-adapter handler/async-ring-handler})
+(run {:handler ring-handler, :handler-fn-adapter handler/async-ring-handler})
 ;=> "Hello from localhost (async)"
 
 
