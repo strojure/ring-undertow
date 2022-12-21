@@ -31,6 +31,10 @@ Clojure ring adapter to Undertow web server.
     - Sessions work without additional middleware, only proper configuration of
       the Undertow server is required.
 
+    - Does not contain rarely used keys like `:websocket?`. But this data can be
+      got from request using functions from the `strojure.ring-undertow.request`
+      namespace.
+
 - Ring [response] allows `HttpHandler` in the `:body`, this allows to easily
   initiate processing like websocket handshake.
 
@@ -116,6 +120,32 @@ functions. See server configuration documentation in [Undertow server API].
 (do (server/set-handler-fn-adapter handler/async-ring-handler)
     (run {:handler ring-handler}))
 ;=> "Hello from localhost (async)"
+```
+
+### Request utility
+
+There are some utility functions to get information from ring requests which is
+not presented as request map keys.
+
+```clojure
+(ns usage.request
+  (:require [strojure.ring-undertow.request :as request]))
+
+;; Check if sessions are enabled in Undertow server configuration.
+
+(request/sessions-enabled? {})
+;=> nil
+
+;; Check if request is websocket upgrade request.
+
+(request/websocket? {})
+;=> nil
+
+(request/websocket? {:headers {"upgrade" "unknown"}})
+;=> false
+
+(request/websocket? {:headers {"upgrade" "websocket"}})
+;=> true
 ```
 
 ## Compatibility reference
