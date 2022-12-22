@@ -172,9 +172,119 @@ requests which is not presented as request map keys.
 
 As far as ring handler is decoupled from server API here is a compatibility
 reference for configuration options from other implementation
-like [luminus][github_luminus].
+like [luminus ring adapter][github_luminus].
 
-TODO
+### `:configurator`
+
+```clojure
+(server/start {:builder-fn-wrapper ...})
+```
+
+### `:host`
+
+```clojure
+(server/start {:port {8080 {:host "localhost"}}})
+```
+
+### `:http?`
+
+```clojure
+;; The listener is HTTP if no :https ptovided.
+(server/start {:port {8080 {#_#_:https {}}}})
+```
+
+### `:port`
+
+```clojure
+(server/start {:port 8080})
+```
+
+There is no default port.
+
+### `:ssl-port`
+
+```clojure
+(server/start {:port {4242 {:https {...}}}})
+```
+
+### `:http2?`
+
+```clojure
+(server/start {:port {4242 {:https {...}}}
+               :server-options {:undertow/enable-http2 true}})
+
+(server/start {:port {4242 {:https {...}
+                            :socket-options {:undertow/enable-http2 true}}}})
+```
+
+### `:direct-buffers?`
+
+```clojure
+(server/start {:direct-buffers true})
+```
+
+### `:dispatch?`
+
+There is not such concept like dispatch for the whole server because server can
+be configured with multiple handler which have different requirements.
+
+So dispatch can be forced by wrapping handler with [handler/dispatch] or by
+using [ring handler][cljdoc_handler] from this library, both are dispatched by
+design.
+
+### `:websocket?`
+
+There is nothing to enable for websockets to work. Just use websocket handlers
+in server configuration or in response `:body`.
+
+### `:async?`
+
+This option relates to handlers but not to the whole server. Just use
+appropriate [ring handler][cljdoc_handler].
+
+### `:handler-proxy`
+
+I have no idea what is this :-)
+
+### `:max-entity-size`
+
+```clojure
+(server/start {:server-options {:undertow/max-entity-size -1}})
+```
+
+### `:session-manager?`
+
+The [handler/session-attachment] should be included in server handler chain to
+enable sessions for next handlers.
+
+```clojure
+(server/start {:handler (-> my-handler
+                            (handler/session-attachment {}))})
+```
+
+### `:custom-manager`
+
+```clojure
+(server/start {:handler (-> my-handler
+                            (handler/session-attachment
+                              {:session-manager ...}))})
+```
+
+### `:max-sessions`
+
+```clojure
+(server/start {:handler (-> my-handler
+                            (handler/session-attachment
+                              {:session-manager {:max-sessions -1}}))})
+```
+
+### `:server-name`
+
+```clojure
+(server/start {:handler (-> my-handler
+                            (handler/session-attachment
+                              {:session-manager {:deployment-name nil}}))})
+```
 
 ## Benchmarks
 
@@ -203,3 +313,9 @@ https://cljdoc.org/d/com.github.strojure/ring-undertow/CURRENT/api/strojure.ring
 
 [cljdoc_handler]:
 https://cljdoc.org/d/com.github.strojure/ring-undertow/CURRENT/api/strojure.ring-undertow.handler
+
+[handler/dispatch]:
+https://cljdoc.org/d/com.github.strojure/undertow/CURRENT/api/strojure.undertow.handler#dispatch
+
+[handler/session-attachment]:
+https://cljdoc.org/d/com.github.strojure/undertow/CURRENT/api/strojure.undertow.handler#session-attachment
