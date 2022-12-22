@@ -228,7 +228,7 @@ Option keys:
 - `:dispatch?`
 
   There is not such concept like dispatch for the whole server because server
-  can be configured with multiple handler which have different requirements.
+  can be configured with multiple handlers having different requirements.
 
   So dispatch can be forced by wrapping handler with [handler/dispatch] or by
   using [ring handler][cljdoc_handler] from this library, both are dispatched by
