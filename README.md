@@ -44,9 +44,9 @@ Clojure ring adapter to Undertow web server.
 ### Handlers
 
 Undertow server allow to use multiple handler functions in various contexts.
-This library provides functions to create server handlers from Clojure
-functions. See server configuration documentation
-in [Undertow server API][github_undertow].
+This library provides [functions to create server handlers][cljdoc_handler] from
+Clojure functions. For server configuration documentation
+see [Undertow server API][github_undertow].
 
 ```clojure
 (ns usage.handlers
@@ -144,8 +144,8 @@ establish websocket connection.
 
 ### Request utility
 
-There are some utility functions to get information from ring requests which is
-not presented as request map keys.
+There are [some utility functions][cljdoc_request] to get information from ring
+requests which is not presented as request map keys.
 
 ```clojure
 (ns usage.request
@@ -171,9 +171,8 @@ not presented as request map keys.
 ## Compatibility reference
 
 As far as ring handler is decoupled from server API here is a compatibility
-reference for configuration options from other implementation like [luminus].
-
-[luminus]: https://github.com/luminus-framework/ring-undertow-adapter
+reference for configuration options from other implementation
+like [luminus][github_luminus].
 
 TODO
 
@@ -195,3 +194,12 @@ https://github.com/ring-clojure/ring/wiki/Concepts#responses
 
 [github_zmap]:
 https://github.com/strojure/zmap
+
+[github_luminus]:
+https://github.com/luminus-framework/ring-undertow-adapter
+
+[cljdoc_request]:
+https://cljdoc.org/d/com.github.strojure/ring-undertow/CURRENT/api/strojure.ring-undertow.request
+
+[cljdoc_handler]:
+https://cljdoc.org/d/com.github.strojure/ring-undertow/CURRENT/api/strojure.ring-undertow.handler
