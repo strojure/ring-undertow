@@ -174,117 +174,119 @@ As far as ring handler is decoupled from server API here is a compatibility
 reference for configuration options from other implementation
 like [luminus ring adapter][github_luminus].
 
-### `:configurator`
+Option keys:
 
-```clojure
-(server/start {:builder-fn-wrapper ...})
-```
+- `:configurator`
 
-### `:host`
+  ```clojure
+  (server/start {:builder-fn-wrapper ...})
+  ```
 
-```clojure
-(server/start {:port {8080 {:host "localhost"}}})
-```
+- `:host`
 
-### `:http?`
+  ```clojure
+  (server/start {:port {8080 {:host "localhost"}}})
+  ```
 
-```clojure
-;; The listener is HTTP if no :https ptovided.
-(server/start {:port {8080 {#_#_:https {}}}})
-```
+- `:http?`
 
-### `:port`
+  ```clojure
+  ;; The listener is HTTP if no :https ptovided.
+  (server/start {:port {8080 {#_#_:https {}}}})
+  ```
 
-```clojure
-(server/start {:port 8080})
-```
+- `:port`
 
-There is no default port.
+  ```clojure
+  (server/start {:port 8080})
+  ```
 
-### `:ssl-port`
+  There is no default port.
 
-```clojure
-(server/start {:port {4242 {:https {...}}}})
-```
+- `:ssl-port`
 
-### `:http2?`
+  ```clojure
+  (server/start {:port {4242 {:https {...}}}})
+  ```
 
-```clojure
-(server/start {:port {4242 {:https {...}}}
-               :server-options {:undertow/enable-http2 true}})
+- `:http2?`
 
-(server/start {:port {4242 {:https {...}
-                            :socket-options {:undertow/enable-http2 true}}}})
-```
+  ```clojure
+  (server/start {:port {4242 {:https {...}}}
+                 :server-options {:undertow/enable-http2 true}})
+  
+  (server/start {:port {4242 {:https {...}
+                              :socket-options {:undertow/enable-http2 true}}}})
+  ```
 
-### `:direct-buffers?`
+- `:direct-buffers?`
 
-```clojure
-(server/start {:direct-buffers true})
-```
+  ```clojure
+  (server/start {:direct-buffers true})
+  ```
 
-### `:dispatch?`
+- `:dispatch?`
 
-There is not such concept like dispatch for the whole server because server can
-be configured with multiple handler which have different requirements.
+  There is not such concept like dispatch for the whole server because server
+  can be configured with multiple handler which have different requirements.
 
-So dispatch can be forced by wrapping handler with [handler/dispatch] or by
-using [ring handler][cljdoc_handler] from this library, both are dispatched by
-design.
+  So dispatch can be forced by wrapping handler with [handler/dispatch] or by
+  using [ring handler][cljdoc_handler] from this library, both are dispatched by
+  design.
 
-### `:websocket?`
+- `:websocket?`
 
-There is nothing to enable for websockets to work. Just use websocket handlers
-in server configuration or in response `:body`.
+  There is nothing to enable for websockets to work. Just use websocket handlers
+  in server configuration or in response `:body`.
 
-### `:async?`
+- `:async?`
 
-This option relates to handlers but not to the whole server. Just use
-appropriate [ring handler][cljdoc_handler].
+  This option relates to handlers but not to the whole server. Just use
+  appropriate [ring handler][cljdoc_handler].
 
-### `:handler-proxy`
+- `:handler-proxy`
 
-I have no idea what is this :-)
+  I have no idea what is this :-)
 
-### `:max-entity-size`
+- `:max-entity-size`
 
-```clojure
-(server/start {:server-options {:undertow/max-entity-size -1}})
-```
+  ```clojure
+  (server/start {:server-options {:undertow/max-entity-size -1}})
+  ```
 
-### `:session-manager?`
+- `:session-manager?`
 
-The [handler/session-attachment] should be included in server handler chain to
-enable sessions for next handlers.
+  The [handler/session-attachment] should be included in server handler chain to
+  enable sessions for next handlers.
 
-```clojure
-(server/start {:handler (-> my-handler
-                            (handler/session-attachment {}))})
-```
+  ```clojure
+  (server/start {:handler (-> my-handler
+                              (handler/session-attachment {}))})
+  ```
 
-### `:custom-manager`
+- `:custom-manager`
 
-```clojure
-(server/start {:handler (-> my-handler
-                            (handler/session-attachment
-                              {:session-manager ...}))})
-```
+  ```clojure
+  (server/start {:handler (-> my-handler
+                              (handler/session-attachment
+                                {:session-manager ...}))})
+  ```
 
-### `:max-sessions`
+- `:max-sessions`
 
-```clojure
-(server/start {:handler (-> my-handler
-                            (handler/session-attachment
-                              {:session-manager {:max-sessions -1}}))})
-```
+  ```clojure
+  (server/start {:handler (-> my-handler
+                              (handler/session-attachment
+                                {:session-manager {:max-sessions -1}}))})
+  ```
 
-### `:server-name`
+- `:server-name`
 
-```clojure
-(server/start {:handler (-> my-handler
-                            (handler/session-attachment
-                              {:session-manager {:deployment-name nil}}))})
-```
+  ```clojure
+  (server/start {:handler (-> my-handler
+                              (handler/session-attachment
+                                {:session-manager {:deployment-name nil}}))})
+  ```
 
 ## Benchmarks
 
