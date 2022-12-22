@@ -61,8 +61,7 @@
     Header names are case-insensitive. The proxy is converted to Clojure map on
     updates.
 
-  - The request map itself is a lazy map (zmap) over `PersistentHashMap` with
-    some values delayed.
+  - The request map itself is a [lazy map][2] with some values delayed.
 
   - The `:session` key is provided when session data is not empty. No additional
     middleware is required for sessions, but only proper configuration of the
@@ -72,6 +71,8 @@
     stream.
 
   [1]: https://github.com/ring-clojure/ring/wiki/Concepts#requests
+
+  [2]: https://github.com/strojure/zmap
   "
   [^HttpServerExchange e]
   (let [query-string (.getQueryString e)

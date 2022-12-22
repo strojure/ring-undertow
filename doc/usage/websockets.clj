@@ -1,8 +1,7 @@
 (ns usage.websockets
-  (:require
-    [strojure.ring-undertow.request :as request]
-    [strojure.undertow.handler :as handler]
-    [strojure.undertow.websocket.channel :as channel]))
+  (:require [strojure.ring-undertow.request :as request]
+            [strojure.undertow.handler :as handler]
+            [strojure.undertow.websocket.channel :as channel]))
 
 (defn on-message
   "Websocket callback."

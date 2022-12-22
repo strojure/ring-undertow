@@ -15,9 +15,10 @@ Clojure ring adapter to Undertow web server.
 
 ## Features
 
-- The handler implementation is decoupled from [Undertow server API].
+- The handler implementation is decoupled
+  from [Undertow server API][github_undertow].
 
-- Ring [request map]:
+- Ring [request map][ring_requests]:
 
     - Does not contain deprecated keys.
 
@@ -25,8 +26,8 @@ Clojure ring adapter to Undertow web server.
       Header names are case-insensitive. The proxy is converted to Clojure map
       on updates.
 
-    - The request map itself is a lazy map (zmap) over `PersistentHashMap` with
-      some values delayed.
+    - The request map itself is a [lazy map][github_zmap] with some values
+      delayed.
 
     - Sessions work without additional middleware, only proper configuration of
       the Undertow server is required.
@@ -35,14 +36,8 @@ Clojure ring adapter to Undertow web server.
       got from request using functions from the `strojure.ring-undertow.request`
       namespace.
 
-- Ring [response] allows `HttpHandler` in the `:body`, this allows to easily
-  initiate processing like websocket handshake.
-
-[Undertow server API]: https://github.com/strojure/undertow
-
-[request map]: https://github.com/ring-clojure/ring/wiki/Concepts#requests
-
-[response]: https://github.com/ring-clojure/ring/wiki/Concepts#responses
+- Ring [response][ring_response] allows `HttpHandler` in the `:body`, this
+  allows to easily initiate processing like websocket handshake.
 
 ## Usage
 
@@ -50,7 +45,8 @@ Clojure ring adapter to Undertow web server.
 
 Undertow server allow to use multiple handler functions in various contexts.
 This library provides functions to create server handlers from Clojure
-functions. See server configuration documentation in [Undertow server API].
+functions. See server configuration documentation
+in [Undertow server API][github_undertow].
 
 ```clojure
 (ns usage.handlers
@@ -121,7 +117,7 @@ functions. See server configuration documentation in [Undertow server API].
 ### Websockets
 
 Websocket server handler can be setup without involving ring handlers like
-described in [Undertow server API].
+described in [Undertow server API][github_undertow].
 
 But it is also possible to return websocket handler in response `:body` to
 establish websocket connection.
@@ -185,3 +181,17 @@ TODO
 
 - [request](doc/benchmark/ring_request.clj)
 - [headers](doc/benchmark/ring_request_headers.clj)
+
+---
+
+[github_undertow]:
+https://github.com/strojure/undertow
+
+[ring_requests]:
+https://github.com/ring-clojure/ring/wiki/Concepts#requests
+
+[ring_response]:
+https://github.com/ring-clojure/ring/wiki/Concepts#responses
+
+[github_zmap]:
+https://github.com/strojure/zmap
