@@ -16,7 +16,7 @@
 (declare ^:private -exchange)
 
 (def ^:private -handler
-  (handler/exchange-fn
+  (handler/with-exchange
     (fn [exchange]
       #_:clj-kondo/ignore
       (def ^HttpServerExchange -exchange exchange))))
@@ -30,7 +30,7 @@
    "Cookie",,,,,,,,, "secret=dfe83f04-2d13-4914-88dd-5005ac317936"
    "Upgrade-Insecure-Requests" "1"})
 
-(with-open [_ (-> {:handler -handler :port 9080} (server/start) (server/closeable))]
+(with-open [_ (server/start {:handler -handler :port 9080})]
   (client/get "http://localhost:9080/?param=value" {:headers -request-headers})
   (println "\nServer exchange:" -exchange "\n"))
 

@@ -73,9 +73,7 @@ functions. See server configuration documentation in [Undertow server API].
   "Helper function to start server with `config`, execute HTTP request, stop
   server, return response body."
   [config]
-  (with-open [_ (-> (assoc config :port 8080)
-                    (server/start)
-                    (server/closeable))]
+  (with-open [_ (server/start (assoc config :port 8080))]
     (:body (client/get "http://localhost:8080/"))))
 
 

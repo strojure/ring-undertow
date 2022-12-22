@@ -16,7 +16,7 @@
   The function `handler-fn` takes one argument, a map representing a HTTP
   request, and return a map representing the HTTP response."
   [handler-fn]
-  (handler/force-dispatch
+  (handler/dispatch
     (reify HttpHandler
       (handleRequest [_ exchange]
         (-> (request/build-request exchange)
