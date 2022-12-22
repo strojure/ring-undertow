@@ -73,14 +73,14 @@ in [Undertow server API][github_undertow].
     (:body (client/get "http://localhost:8080/"))))
 
 
-;;; Direct call of handler function.
+;;; Explicit invocation of handler function.
 
-;; Synchronous ring handler - directly
+;; Synchronous ring handler - explicitly
 
 (run {:handler (handler/sync-ring-handler ring-handler)})
 ;=> "Hello from localhost (sync)"
 
-;; Asynchronous ring handler - directly
+;; Asynchronous ring handler - explicitly
 
 (run {:handler (handler/async-ring-handler ring-handler)})
 ;=> "Hello from localhost (async)"
