@@ -21,43 +21,46 @@
   (with-open [_ (server/start (assoc config :port 8080))]
     (:body (client/get "http://localhost:8080/"))))
 
-
-;;; Explicit invocation of handler function.
+;; ## Explicit invocation of handler function
 
 ;; Synchronous ring handler - explicitly
-
 (run {:handler (handler/ring-sync ring-handler)})
 ;=> "Hello from localhost (sync)"
 
 ;; Asynchronous ring handler - explicitly
-
 (run {:handler (handler/ring-async ring-handler)})
 ;=> "Hello from localhost (async)"
 
-
-;;; Using adapter configuration option.
+;; ## Using adapter configuration option
 
 ;; Synchronous ring handler - adapter in configuration
-
 (run {:handler ring-handler, :handler-fn-adapter handler/ring-sync})
 ;=> "Hello from localhost (sync)"
 
 ;; Asynchronous ring handler - adapter in configuration
-
 (run {:handler ring-handler, :handler-fn-adapter handler/ring-async})
 ;=> "Hello from localhost (async)"
 
+;; ## Using declarative handler configuration
+;;
+;; NOTE: The `strojure.ring-undertow.handler` namespace need to be imported.
 
-;;; Setting adapter globally before server start.
+;; Synchronous ring handler - declarative
+(run {:handler {:type handler/ring :fn ring-handler}})
+;=> "Hello from localhost (sync)"
+
+;; Asynchronous ring handler - declarative
+(run {:handler {:type ::handler/ring :fn ring-handler :async true}})
+;=> "Hello from localhost (async)"
+
+;; ## Setting adapter globally before server start
 
 ;; Synchronous ring handler - global assignment
-
 (do (server/set-handler-fn-adapter handler/ring-sync)
     (run {:handler ring-handler}))
 ;=> "Hello from localhost (sync)"
 
 ;; Asynchronous ring handler - global assignment
-
 (do (server/set-handler-fn-adapter handler/ring-async)
     (run {:handler ring-handler}))
 ;=> "Hello from localhost (async)"

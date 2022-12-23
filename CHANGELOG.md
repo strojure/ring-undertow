@@ -12,6 +12,7 @@ Release date `Unreleased`
     - `handler/sync-ring-handler` to `ring-sync`
     - `handler/async-ring-handler` to `ring-async`
 - Upgrade undertow API to version `1.0.57-beta7`
+- #1 Implement declarative configuration of ring handler
 
 ## `1.0.25-beta.3`
 
