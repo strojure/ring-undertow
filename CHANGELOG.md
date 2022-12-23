@@ -4,9 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## `1.0.26-SNAPSHOT`
+## `1.0.34-SNAPSHOT`
 
-Release date `Unreleased`
+Release date `UNRELEASED`
+
+## `1.0.33-beta4`
+
+Release date `2022-12-23`
 
 - Rename handler functions
     - `handler/sync-ring-handler` to `ring-sync`
