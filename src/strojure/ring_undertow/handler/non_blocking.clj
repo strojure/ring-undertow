@@ -8,7 +8,7 @@
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-(defn sync-ring-handler
+(defn ring-sync
   "Returns HttpHandler for **synchronous** ring handler function executed *on IO
   thread*.
 

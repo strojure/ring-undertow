@@ -10,7 +10,7 @@
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-(defn sync-ring-handler
+(defn ring-sync
   "Returns HttpHandler for **synchronous** ring handler function.
 
   The function `handler-fn` takes one argument, a map representing a HTTP
@@ -25,7 +25,7 @@
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-(defn async-ring-handler
+(defn ring-async
   "Returns HttpHandler for **asynchronous** ring handler function.
 
   The function `handler-fn` takes three arguments: the request map, a response

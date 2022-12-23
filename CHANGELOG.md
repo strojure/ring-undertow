@@ -8,7 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 Release date `Unreleased`
 
-- 
+- Rename handler functions
+    - `handler/sync-ring-handler` to `ring-sync`
+    - `handler/async-ring-handler` to `ring-async`
 
 ## `1.0.25-beta.3`
 

@@ -77,12 +77,12 @@ see [Undertow server API][github_undertow].
 
 ;; Synchronous ring handler - explicitly
 
-(run {:handler (handler/sync-ring-handler ring-handler)})
+(run {:handler (handler/ring-sync ring-handler)})
 ;=> "Hello from localhost (sync)"
 
 ;; Asynchronous ring handler - explicitly
 
-(run {:handler (handler/async-ring-handler ring-handler)})
+(run {:handler (handler/ring-async ring-handler)})
 ;=> "Hello from localhost (async)"
 
 
@@ -90,12 +90,12 @@ see [Undertow server API][github_undertow].
 
 ;; Synchronous ring handler - adapter in configuration
 
-(run {:handler ring-handler, :handler-fn-adapter handler/sync-ring-handler})
+(run {:handler ring-handler, :handler-fn-adapter handler/ring-sync})
 ;=> "Hello from localhost (sync)"
 
 ;; Asynchronous ring handler - adapter in configuration
 
-(run {:handler ring-handler, :handler-fn-adapter handler/async-ring-handler})
+(run {:handler ring-handler, :handler-fn-adapter handler/ring-async})
 ;=> "Hello from localhost (async)"
 
 
@@ -103,13 +103,13 @@ see [Undertow server API][github_undertow].
 
 ;; Synchronous ring handler - global assignment
 
-(do (server/set-handler-fn-adapter handler/sync-ring-handler)
+(do (server/set-handler-fn-adapter handler/ring-sync)
     (run {:handler ring-handler}))
 ;=> "Hello from localhost (sync)"
 
 ;; Asynchronous ring handler - global assignment
 
-(do (server/set-handler-fn-adapter handler/async-ring-handler)
+(do (server/set-handler-fn-adapter handler/ring-async)
     (run {:handler ring-handler}))
 ;=> "Hello from localhost (async)"
 ```
