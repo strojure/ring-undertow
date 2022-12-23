@@ -11,6 +11,7 @@ Release date `Unreleased`
 - Rename handler functions
     - `handler/sync-ring-handler` to `ring-sync`
     - `handler/async-ring-handler` to `ring-async`
+- Upgrade undertow API to version `1.0.57-beta7`
 
 ## `1.0.25-beta.3`
 

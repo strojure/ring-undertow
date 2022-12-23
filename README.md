@@ -256,19 +256,19 @@ Option keys:
 
 - `:session-manager?`
 
-  The [handler/session-attachment] should be included in server handler chain to
-  enable sessions for next handlers.
+  The [handler/session] should be included in server handler chain to enable
+  sessions for next handlers.
 
   ```clojure
   (server/start {:handler (-> my-handler
-                              (handler/session-attachment {}))})
+                              (handler/session {}))})
   ```
 
 - `:custom-manager`
 
   ```clojure
   (server/start {:handler (-> my-handler
-                              (handler/session-attachment
+                              (handler/session
                                 {:session-manager ...}))})
   ```
 
@@ -276,7 +276,7 @@ Option keys:
 
   ```clojure
   (server/start {:handler (-> my-handler
-                              (handler/session-attachment
+                              (handler/session
                                 {:session-manager {:max-sessions -1}}))})
   ```
 
@@ -284,7 +284,7 @@ Option keys:
 
   ```clojure
   (server/start {:handler (-> my-handler
-                              (handler/session-attachment
+                              (handler/session
                                 {:session-manager {:deployment-name nil}}))})
   ```
 
@@ -319,5 +319,5 @@ https://cljdoc.org/d/com.github.strojure/ring-undertow/CURRENT/api/strojure.ring
 [handler/dispatch]:
 https://cljdoc.org/d/com.github.strojure/undertow/CURRENT/api/strojure.undertow.handler#dispatch
 
-[handler/session-attachment]:
-https://cljdoc.org/d/com.github.strojure/undertow/CURRENT/api/strojure.undertow.handler#session-attachment
+[handler/session]:
+https://cljdoc.org/d/com.github.strojure/undertow/CURRENT/api/strojure.undertow.handler#session
