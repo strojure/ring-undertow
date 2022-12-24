@@ -141,11 +141,12 @@ see [Undertow server API][github_undertow].
 ;; NOTE: The `strojure.ring-undertow.handler` namespace need to be imported.
 
 ;; Synchronous ring handler - declarative
-(run {:handler {:type ring.handler/ring :fn ring-handler}})
+(run {:handler {:type ring.handler/ring :ring-handler ring-handler}})
 ;=> "Hello from localhost (sync)"
 
 ;; Asynchronous ring handler - declarative
-(run {:handler {:type ::ring.handler/ring :fn ring-handler :async true}})
+(run {:handler {:type ::ring.handler/ring :ring-handler ring-handler
+                :ring-handler-type :async}})
 ;=> "Hello from localhost (async)"
 
 ;; ## Setting adapter globally before server start

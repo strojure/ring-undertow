@@ -5,7 +5,8 @@
             [strojure.ring-undertow.impl.response :as response]
             [strojure.undertow.api.exchange :as exchange]
             [strojure.undertow.handler :as handler])
-  (:import (io.undertow.server HttpHandler)))
+  (:import (clojure.lang MultiFn)
+           (io.undertow.server HttpHandler)))
 
 (set! *warn-on-reflection* true)
 
@@ -47,27 +48,43 @@
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
+(defmulti adapter
+  "Returns handler function adapter for `:ring-handler-type` key in server
+  configuration."
+  {:arglists '([config])}
+  :ring-handler-type)
+
+(.addMethod ^MultiFn adapter nil (constantly sync))
+(.addMethod ^MultiFn adapter :sync (constantly sync))
+(.addMethod ^MultiFn adapter :async (constantly async))
+
+;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
 (defn ring
   "Returns HttpHandler for [ring handler function][1].
 
-  - `:fn`    The function to return `HttpHandler` for.
-  - `:async` Boolean flag if handler function is synchronous or asynchronous.
-             See also documentation for [[sync]] and [[async]].
+  - `:ring-handler` The function to return `HttpHandler` for.
+
+  - `:ring-handler-type` The type of all ring handlers in the configuration.
+      - No value or value `:sync` means synchronous ring handler [[sync]].
+      - Value `:async` means asynchronous ring handler [[async]].
 
   Can be used declaratively in server-configuration:
 
-      (server/start {:handler {:type ring, :fn my-handler-fn, :async true}})
+      (server/start {:handler {:type ring, :ring-handler my-handler-fn}})
+
+      (server/start {:handler {:type ring, :ring-handler my-handler-fn,
+                               :ring-handler-type :async}})
 
   NOTE: The `strojure.ring-undertow.handler` namespace need to be imported to
         make declarative configuration available.
 
   [1]: https://github.com/ring-clojure/ring/wiki/Concepts#handlers
   "
-  [{handler :fn async? :async}]
-  (assert (fn? handler) (str "Requires function in :handler key: " (pr-str handler)))
-  (if async?
-    (async handler)
-    (sync handler)))
+  [{:keys [ring-handler] :as config}]
+  (assert (fn? ring-handler)
+          (str "Requires function in :handler key: " (pr-str ring-handler)))
+  ((adapter config) ring-handler))
 
 (handler/define-type ring {:alias ::ring :as-handler ring})
 
