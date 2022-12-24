@@ -9,6 +9,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 Release date `UNRELEASED`
 
 - Implement `server` namespace for convenient start/stop.
+- Rename handler functions
+  - `handler/ring-sync` to `sync`
+  - `handler/ring-async` to `async`
 
 ## `1.0.36-beta5`
 

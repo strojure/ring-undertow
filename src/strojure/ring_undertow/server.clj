@@ -1,5 +1,5 @@
 (ns strojure.ring-undertow.server
-  (:require [strojure.ring-undertow.handler :as handler]
+  (:require [strojure.ring-undertow.handler :as ring.handler]
             [strojure.undertow.api.types :as types]
             [strojure.undertow.server :as server])
   (:import (clojure.lang MultiFn)))
@@ -13,9 +13,9 @@
   configuration."
   :ring-handler-type)
 
-(.addMethod ^MultiFn handler-type-adapter nil (constantly handler/ring-sync))
-(.addMethod ^MultiFn handler-type-adapter :sync (constantly handler/ring-sync))
-(.addMethod ^MultiFn handler-type-adapter :async (constantly handler/ring-async))
+(.addMethod ^MultiFn handler-type-adapter nil (constantly ring.handler/sync))
+(.addMethod ^MultiFn handler-type-adapter :sync (constantly ring.handler/sync))
+(.addMethod ^MultiFn handler-type-adapter :async (constantly ring.handler/async))
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
@@ -27,9 +27,11 @@
   - `:ring-handler-type` The type of all ring handlers in the configuration.
       - No value or value `:sync` means synchronous ring handler.
       - Value `:async` means asynchronous ring handler.
-    To use handlers of mixed type you should apply functions
-    [[handler/ring-sync]] and [[handler/ring-async]] to your handlers
-    explicitly.
+
+  To use handlers of mixed type you can either:
+
+  - configure handler declaratively like described in [[handler/ring]];
+  - apply functions [[handler/sync]] and [[handler/async]] to your handlers explicitly.
 
   [1]: https://cljdoc.org/d/com.github.strojure/undertow/CURRENT/api/strojure.undertow.server#start
   "

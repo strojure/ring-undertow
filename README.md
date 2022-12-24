@@ -93,8 +93,9 @@ see [Undertow server API][github_undertow].
 
 ```clojure
 (ns usage.handlers
-  (:require [clj-http.client :as client]
-    [strojure.ring-undertow.handler :as handler]
+  (:require 
+    [clj-http.client :as client]
+    [strojure.ring-undertow.handler :as ring.handler]
     [strojure.undertow.server :as server]))
 
 (defn ring-handler
@@ -118,21 +119,21 @@ see [Undertow server API][github_undertow].
 ;; ## Explicit invocation of handler function
 
 ;; Synchronous ring handler - explicitly
-(run {:handler (handler/ring-sync ring-handler)})
+(run {:handler (ring.handler/sync ring-handler)})
 ;=> "Hello from localhost (sync)"
 
 ;; Asynchronous ring handler - explicitly
-(run {:handler (handler/ring-async ring-handler)})
+(run {:handler (ring.handler/async ring-handler)})
 ;=> "Hello from localhost (async)"
 
 ;; ## Using adapter configuration option
 
 ;; Synchronous ring handler - adapter in configuration
-(run {:handler ring-handler, :handler-fn-adapter handler/ring-sync})
+(run {:handler ring-handler, :handler-fn-adapter ring.handler/sync})
 ;=> "Hello from localhost (sync)"
 
 ;; Asynchronous ring handler - adapter in configuration
-(run {:handler ring-handler, :handler-fn-adapter handler/ring-async})
+(run {:handler ring-handler, :handler-fn-adapter ring.handler/async})
 ;=> "Hello from localhost (async)"
 
 ;; ## Using declarative handler configuration
@@ -140,22 +141,22 @@ see [Undertow server API][github_undertow].
 ;; NOTE: The `strojure.ring-undertow.handler` namespace need to be imported.
 
 ;; Synchronous ring handler - declarative
-(run {:handler {:type handler/ring :fn ring-handler}})
+(run {:handler {:type ring.handler/ring :fn ring-handler}})
 ;=> "Hello from localhost (sync)"
 
 ;; Asynchronous ring handler - declarative
-(run {:handler {:type ::handler/ring :fn ring-handler :async true}})
+(run {:handler {:type ::ring.handler/ring :fn ring-handler :async true}})
 ;=> "Hello from localhost (async)"
 
 ;; ## Setting adapter globally before server start
 
 ;; Synchronous ring handler - global assignment
-(do (server/set-handler-fn-adapter handler/ring-sync)
+(do (server/set-handler-fn-adapter ring.handler/sync)
     (run {:handler ring-handler}))
 ;=> "Hello from localhost (sync)"
 
 ;; Asynchronous ring handler - global assignment
-(do (server/set-handler-fn-adapter handler/ring-async)
+(do (server/set-handler-fn-adapter ring.handler/async)
     (run {:handler ring-handler}))
 ;=> "Hello from localhost (async)"
 ```

@@ -1,5 +1,6 @@
 (ns strojure.ring-undertow.handler
   "Ring handler for Undertow server."
+  (:refer-clojure :exclude [sync])
   (:require [strojure.ring-undertow.impl.request :as request]
             [strojure.ring-undertow.impl.response :as response]
             [strojure.undertow.api.exchange :as exchange]
@@ -10,7 +11,7 @@
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-(defn ring-sync
+(defn sync
   "Returns HttpHandler for **synchronous** [ring handler function][1].
 
   The function `handler-fn` takes one argument, a map representing a HTTP
@@ -28,7 +29,7 @@
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-(defn ring-async
+(defn async
   "Returns HttpHandler for **asynchronous** [ring handler function][1].
 
   The function `handler-fn` takes three arguments: the request map, a response
@@ -51,7 +52,7 @@
 
   - `:fn`    The function to return `HttpHandler` for.
   - `:async` Boolean flag if handler function is synchronous or asynchronous.
-             See also documentation for [[ring-sync]] and [[ring-async]].
+             See also documentation for [[sync]] and [[async]].
 
   Can be used declaratively in server-configuration:
 
@@ -62,11 +63,11 @@
 
   [1]: https://github.com/ring-clojure/ring/wiki/Concepts#handlers
   "
-  [{handler :fn async :async}]
+  [{handler :fn async? :async}]
   (assert (fn? handler) (str "Requires function in :handler key: " (pr-str handler)))
-  (if async
-    (ring-async handler)
-    (ring-sync handler)))
+  (if async?
+    (async handler)
+    (sync handler)))
 
 (handler/define-type ring {:alias ::ring :as-handler ring})
 
