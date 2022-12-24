@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 Release date `UNRELEASED`
 
+- 
+
+## `1.0.41-beta6`
+
+Release date `2022-12-24`
+
 - Implement `server` namespace for convenient start/stop.
 - Rename handler functions:
   - `handler/ring-sync` to `sync`;

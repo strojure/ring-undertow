@@ -20,7 +20,8 @@
   To use handlers of mixed type you can either:
 
   - configure handler declaratively like described in [[handler/ring]];
-  - apply functions [[handler/sync]] and [[handler/async]] to your handlers explicitly.
+  - apply functions [[handler/sync]] and [[handler/async]] to your handlers
+    explicitly.
 
   [1]: https://cljdoc.org/d/com.github.strojure/undertow/CURRENT/api/strojure.undertow.server#start
   "
