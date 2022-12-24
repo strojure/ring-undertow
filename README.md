@@ -41,6 +41,49 @@ Clojure ring adapter to Undertow web server.
 
 ## Usage
 
+### Server
+
+The library provides its own [functions][cljdoc_server] to start and stop
+server. The [start][cljdoc_server_start] function enables ring handler adapter
+(sync or async) for all functions specified as handlers in server configuration.
+
+```clojure
+(ns usage.server
+  (:require [clj-http.client :as client]
+            [strojure.ring-undertow.server :as server]))
+
+(defn ring-handler
+  "The ring handler function, both sync and async."
+  ([request]
+   {:body (str "Hello from " (:server-name request) " (sync)")})
+  ([request respond raise]
+   (future
+     (try
+       (respond {:body (str "Hello from " (:server-name request) " (async)")})
+       (catch Throwable t
+         (raise t))))))
+
+(defn- run
+  "Helper function to execute GET request, stop `server`, return response body."
+  [server]
+  (with-open [_ server]
+    (let [port (-> server :undertow bean :listenerInfo first bean :address bean :port)]
+      (:body (client/get (str "http://localhost:" port "/"))))))
+
+;; Synchronous ring handler
+(run (server/start {:port 8080
+                    :handler ring-handler}))
+;; or
+(run (server/start {:port 8080
+                    :handler ring-handler
+                    :ring-handler-type :sync}))
+
+;; Asynchronous ring handler
+(run (server/start {:port 8080
+                    :handler ring-handler
+                    :ring-handler-type :async}))
+```
+
 ### Handlers
 
 Undertow server allow to use multiple handler functions in various contexts.
@@ -312,6 +355,12 @@ https://github.com/strojure/zmap
 
 [github_luminus]:
 https://github.com/luminus-framework/ring-undertow-adapter
+
+[cljdoc_server]:
+https://cljdoc.org/d/com.github.strojure/ring-undertow/CURRENT/api/strojure.ring-undertow.server
+
+[cljdoc_server_start]:
+https://cljdoc.org/d/com.github.strojure/ring-undertow/CURRENT/api/strojure.ring-undertow.server#start
 
 [cljdoc_request]:
 https://cljdoc.org/d/com.github.strojure/ring-undertow/CURRENT/api/strojure.ring-undertow.request
