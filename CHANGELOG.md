@@ -4,9 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## `1.0.42-SNAPSHOT`
+## `1.0.46-SNAPSHOT`
 
 Release date `UNRELEASED`
+
+## `1.0.45-beta7`
+
+Release date `2022-12-25`
 
 - Implement configuration adapter for Luminus ring adapter.
 - Upgrade undertow API to version `1.0.64-beta9`
