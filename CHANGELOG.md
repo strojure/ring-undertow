@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 Release date `UNRELEASED`
 
 - Implement configuration adapter for Luminus ring adapter.
+- Upgrade undertow API to version `1.0.64-beta9`
 
 ## `1.0.41-beta6`
 

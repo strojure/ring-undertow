@@ -4,7 +4,7 @@
   :license {:name "The MIT License" :url "http://opensource.org/licenses/MIT"}
 
   :dependencies [;; Undertow server API.
-                 [com.github.strojure/undertow "1.0.60-beta8"]
+                 [com.github.strojure/undertow "1.0.64-beta9"]
                  ;; Lazy map for ring request.
                  [com.github.strojure/zmap "1.0.2"]]
 
