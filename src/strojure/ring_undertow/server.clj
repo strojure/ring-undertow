@@ -1,4 +1,5 @@
 (ns strojure.ring-undertow.server
+  "Server's start/stop functionality with ring handler adapter."
   (:require [strojure.ring-undertow.handler :as ring.handler]
             [strojure.undertow.api.types :as types]
             [strojure.undertow.server :as server]))
