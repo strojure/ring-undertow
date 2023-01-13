@@ -50,7 +50,8 @@ server. The [start][cljdoc_server_start] function enables ring handler adapter
 ```clojure
 (ns usage.server
   (:require [clj-http.client :as client]
-            [strojure.ring-undertow.server :as server]))
+            [strojure.ring-undertow.server :as server]
+            [strojure.undertow.api.types :as types]))
 
 (defn ring-handler
   "The ring handler function, both sync and async."
@@ -67,7 +68,7 @@ server. The [start][cljdoc_server_start] function enables ring handler adapter
   "Helper function to execute GET request, stop `server`, return response body."
   [server]
   (with-open [_ server]
-    (let [port (-> server :undertow bean :listenerInfo first bean :address bean :port)]
+    (let [port (-> server types/bean* :listenerInfo first :address :port)]
       (:body (client/get (str "http://localhost:" port "/"))))))
 
 ;; Synchronous ring handler
