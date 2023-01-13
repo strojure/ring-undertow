@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 Release date `UNRELEASED`
 
+- Upgrade dependencies - strojure/undertow "1.0.69-rc1", zmap "1.1.5".
+
 ## `1.0.45-beta7`
 
 Release date `2022-12-25`
