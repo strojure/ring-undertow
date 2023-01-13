@@ -4,9 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## `1.0.46-SNAPSHOT`
+## `1.0.53-SNAPSHOT`
 
 Release date `UNRELEASED`
+
+## `1.0.52-beta8`
+
+Release date `2023-01-13`
 
 - Upgrade dependencies - strojure/undertow "1.0.69-rc1", zmap "1.1.5".
 - Change `toString` for HeaderMapProxy to use underlying `HeaderMap.toString`.
