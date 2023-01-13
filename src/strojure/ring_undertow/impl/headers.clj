@@ -2,7 +2,7 @@
   "Implementation of persistent map proxy over Undertow request headers."
   (:require [clojure.string :as string])
   (:import (clojure.lang APersistentMap IEditableCollection IFn IKVReduce
-                         IPersistentMap MapEntry MapEquivalence RT Util)
+                         IPersistentMap MapEntry MapEquivalence Util)
            (io.undertow.util HeaderMap HeaderValues)
            (java.util Map)))
 
@@ -116,8 +116,8 @@
         (set! persistent-copy (to-persistent-map headers))))
   Object
   (toString
-    [this]
-    (RT/printString this)))
+    [_]
+    (.toString headers)))
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
