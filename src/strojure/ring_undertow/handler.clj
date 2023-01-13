@@ -86,6 +86,6 @@
           (str "Requires function in :handler key: " (pr-str ring-handler)))
   ((adapter config) ring-handler))
 
-(handler/define-type ring {:alias ::ring :as-handler ring})
+(handler/define-type `ring {:alias ::ring :as-handler ring})
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
