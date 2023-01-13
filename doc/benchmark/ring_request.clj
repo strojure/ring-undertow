@@ -40,16 +40,16 @@
 
 (comment
   (impl/build-request -exchange)
-  ;             Execution time mean : 864,001111 ns
-  ;    Execution time std-deviation : 38,565622 ns
-  ;   Execution time lower quantile : 821,576306 ns ( 2,5%)
-  ;   Execution time upper quantile : 913,308299 ns (97,5%)
+  ;             Execution time mean : 697,643335 ns
+  ;    Execution time std-deviation : 16,956270 ns
+  ;   Execution time lower quantile : 678,883685 ns ( 2,5%)
+  ;   Execution time upper quantile : 721,282042 ns (97,5%)
 
   (luminus/build-exchange-map -exchange)
-  ;             Execution time mean : 3,671207 µs
-  ;    Execution time std-deviation : 74,979837 ns
-  ;   Execution time lower quantile : 3,582769 µs ( 2,5%)
-  ;   Execution time upper quantile : 3,785342 µs (97,5%)
+  ;             Execution time mean : 4,317021 µs
+  ;    Execution time std-deviation : 60,236093 ns
+  ;   Execution time lower quantile : 4,237576 µs ( 2,5%)
+  ;   Execution time upper quantile : 4,391014 µs (97,5%)
 
   ;; Immutant is fast but it returns java.util.Map which is converted on change.
   (immutant/ring-request-map -exchange)
@@ -66,24 +66,24 @@
 (comment
   (-> (impl/build-request -exchange)
       (assoc :a 1))
-  ;             Execution time mean : 951,598907 ns
-  ;    Execution time std-deviation : 36,677844 ns
-  ;   Execution time lower quantile : 897,164812 ns ( 2,5%)
-  ;   Execution time upper quantile : 990,524070 ns (97,5%)
+  ;             Execution time mean : 880,222280 ns
+  ;    Execution time std-deviation : 24,823099 ns
+  ;   Execution time lower quantile : 847,510288 ns ( 2,5%)
+  ;   Execution time upper quantile : 907,850522 ns (97,5%)
 
   (-> (luminus/build-exchange-map -exchange)
       (assoc :a 1))
-  ;             Execution time mean : 3,892380 µs
-  ;    Execution time std-deviation : 83,973248 ns
-  ;   Execution time lower quantile : 3,812082 µs ( 2,5%)
-  ;   Execution time upper quantile : 4,025584 µs (97,5%)
+  ;             Execution time mean : 4,493658 µs
+  ;    Execution time std-deviation : 102,608011 ns
+  ;   Execution time lower quantile : 4,329457 µs ( 2,5%)
+  ;   Execution time upper quantile : 4,592031 µs (97,5%)
 
   (-> (immutant/ring-request-map -exchange)
       (assoc :a 1))
-  ;             Execution time mean : 2,249681 µs
-  ;    Execution time std-deviation : 102,768028 ns
-  ;   Execution time lower quantile : 2,140457 µs ( 2,5%)
-  ;   Execution time upper quantile : 2,414315 µs (97,5%)
+  ;             Execution time mean : 2,304262 µs
+  ;    Execution time std-deviation : 45,636796 ns
+  ;   Execution time lower quantile : 2,259740 µs ( 2,5%)
+  ;   Execution time upper quantile : 2,363342 µs (97,5%)
   )
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
@@ -93,24 +93,24 @@
 (comment
   (-> (impl/build-request -exchange)
       :headers (get "cookie"))
-  ;             Execution time mean : 948,206212 ns
-  ;    Execution time std-deviation : 29,449050 ns
-  ;   Execution time lower quantile : 919,992777 ns ( 2,5%)
-  ;   Execution time upper quantile : 991,957280 ns (97,5%)
+  ;             Execution time mean : 750,271305 ns
+  ;    Execution time std-deviation : 25,946630 ns
+  ;   Execution time lower quantile : 722,563834 ns ( 2,5%)
+  ;   Execution time upper quantile : 785,599982 ns (97,5%)
 
   (-> (luminus/build-exchange-map -exchange)
       :headers (get "cookie"))
-  ;             Execution time mean : 3,751872 µs
-  ;    Execution time std-deviation : 115,852475 ns
-  ;   Execution time lower quantile : 3,661520 µs ( 2,5%)
-  ;   Execution time upper quantile : 3,927895 µs (97,5%)
+  ;             Execution time mean : 4,483495 µs
+  ;    Execution time std-deviation : 82,596506 ns
+  ;   Execution time lower quantile : 4,389776 µs ( 2,5%)
+  ;   Execution time upper quantile : 4,581021 µs (97,5%)
 
   (-> (immutant/ring-request-map -exchange)
       :headers (get "cookie"))
-  ;             Execution time mean : 7,746406 µs
-  ;    Execution time std-deviation : 246,297129 ns
-  ;   Execution time lower quantile : 7,497864 µs ( 2,5%)
-  ;   Execution time upper quantile : 8,014431 µs (97,5%)
+  ;             Execution time mean : 8,169952 µs
+  ;    Execution time std-deviation : 219,081729 ns
+  ;   Execution time lower quantile : 7,831553 µs ( 2,5%)
+  ;   Execution time upper quantile : 8,376565 µs (97,5%)
   )
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
