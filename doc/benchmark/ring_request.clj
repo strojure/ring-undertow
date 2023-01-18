@@ -31,7 +31,7 @@
    "Upgrade-Insecure-Requests" "1"})
 
 (with-open [_ (server/start {:handler -handler :port 9080})]
-  (client/get "http://localhost:9080/?param=value" {:headers -request-headers})
+  (client/get "http://localhost:9080/path?param=value" {:headers -request-headers})
   (println "\nServer exchange:" -exchange "\n"))
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
@@ -140,6 +140,8 @@
   ;Execution time mean : 5,686585 ns
   (.getRequestURI -exchange)
   ;Execution time mean : 5,320602 ns
+  (.getRequestPath -exchange)
+  ;Execution time mean : 4,877129 ns
   (.getQueryString -exchange)
   ;Execution time mean : 5,775425 ns
   )

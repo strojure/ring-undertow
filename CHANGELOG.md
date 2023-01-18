@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 Release date `UNRELEASED`
 
+- Use `exchange.getRequestPath` instead of `.getRequestURI` which can contains
+  host.
+
 ## `1.0.52-beta8`
 
 Release date `2023-01-13`

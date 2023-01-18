@@ -88,7 +88,7 @@
         (.assoc :server-port,,, (zmap/delay (.getPort (.getDestinationAddress e))))
         (.assoc :server-name,,, (zmap/delay (.getHostName e)))
         (.assoc :remote-addr,,, (zmap/delay (.getHostAddress (.getAddress (.getSourceAddress e)))))
-        (.assoc :uri,,,,,,,,,,, (.getRequestURI e))
+        (.assoc :uri,,,,,,,,,,, (.getRequestPath e))
         (.assoc :scheme,,,,,,,, (scheme-keyword (.getRequestScheme e)))
         (.assoc :request-method (method-keyword (.toString (.getRequestMethod e))))
         (.assoc :headers,,,,,,, (headers/header-map-proxy (.getRequestHeaders e)))
