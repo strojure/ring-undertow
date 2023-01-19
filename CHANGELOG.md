@@ -4,9 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## `1.0.53-SNAPSHOT`
+## `1.0.59-SNAPSHOT`
 
 Release date `UNRELEASED`
+
+## `1.0.58-beta9`
+
+Release date `2023-01-19`
 
 - Use `exchange.getRequestPath` instead of `.getRequestURI` which can contains
   host.
