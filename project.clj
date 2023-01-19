@@ -4,9 +4,9 @@
   :license {:name "The MIT License" :url "http://opensource.org/licenses/MIT"}
 
   :dependencies [;; Undertow server API.
-                 [com.github.strojure/undertow "1.0.69-rc1"]
+                 [com.github.strojure/undertow "1.0.72-rc2"]
                  ;; Lazy map for ring request.
-                 [com.github.strojure/zmap "1.1.5"]]
+                 [com.github.strojure/zmap "1.2.11"]]
 
   :profiles {:provided {:dependencies [[org.clojure/clojure "1.11.1"]]}
              :dev,,,,, {:dependencies [;; Competitor libraries
