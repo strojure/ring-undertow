@@ -12,5 +12,5 @@
   "Ring handler initiating websocket connection."
   [request]
   (if (request/websocket? request)
-    {:body (handler/websocket {:on-message on-message})}
-    {:status 404}))
+    (handler/websocket {:on-message on-message})
+    {:status 400}))

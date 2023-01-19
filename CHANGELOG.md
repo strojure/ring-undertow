@@ -10,6 +10,7 @@ Release date `UNRELEASED`
 
 - Use `exchange.getRequestPath` instead of `.getRequestURI` which can contains
   host.
+- Accept `HttpHandler` as response instead of handler in the `:body`.
 
 ## `1.0.52-beta8`
 

@@ -3,9 +3,10 @@
   (:require [clojure.java.io :as io]
             [strojure.ring-undertow.impl.session :as session]
             [strojure.undertow.api.exchange :as exchange])
-  (:import (clojure.lang Associative ISeq)
+  (:import (clojure.lang IPersistentMap ISeq)
            (io.undertow.io Sender)
            (io.undertow.server HttpHandler HttpServerExchange)
+           (io.undertow.server.handlers ResponseCodeHandler)
            (java.io File InputStream OutputStream)
            (java.nio ByteBuffer)
            (java.nio.charset Charset)))
@@ -89,17 +90,12 @@
                           (with-open [input (io/input-stream file)]
                             (io/copy input output))))))
 
-;; Allow to use any Undertow handler as response body.
-(extend-protocol ResponseBody HttpHandler
-  (send-response-fn
-    [handler]
-    (fn [exchange]
-      (.handleRequest handler exchange))))
-
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-(defn handle-response
-  "Handles [ring response map][1].
+(defprotocol HandleResponse
+  (handle-response
+    [response exchange]
+    "Handles [ring response map][1].
 
   - Puts `:headers` to response headers.
   - Sets `:status` if presented.
@@ -116,18 +112,40 @@
                           the stream is exhausted, the stream is closed.
       + Additional body types:
           - `ByteBuffer`  Similar to `String` but response charset is not used.
-          - `HttpHandler` The Undertow handler in the `:body` is handled, this
-                          allows to initiate processing like websocket handshake.
       + Custom body types can be added by extending [[ResponseBody]] protocol.
 
+  Also accepts other types of `response`:
+
+  - `io.undertow.server.HttpHandler` – invokes `.handleRequest` on this handler.
+      + This allows to initiate processing like websocket handshake.
+
+  - `nil` – responses with HTTP 404.
+
+  Custom response types can be added by extending [[HandleResponse]] protocol.
+
   [1]: https://github.com/ring-clojure/ring/wiki/Concepts#responses
-  "
-  [^Associative response, ^HttpServerExchange exchange]
-  (when response
+  "))
+
+;; Handle Ring response map.
+(extend-protocol HandleResponse IPersistentMap
+  (handle-response
+    [response ^HttpServerExchange exchange]
     (when-some [headers,, (.valAt response :headers)] (doto exchange (put-headers headers)))
     (when-some [status,,, (.valAt response :status)], (doto exchange (.setStatusCode status)))
     (when-some [session (.entryAt response :session)] (doto exchange (session/put-session-entries (val session))))
-    (when-some [body,,,,, (.valAt response :body)],,, (doto exchange ((send-response-fn body)))))
-  nil)
+    (when-some [body,,,,, (.valAt response :body)],,, (doto exchange ((send-response-fn body))))
+    nil))
+
+;; Allow to use any Undertow handler as response.
+(extend-protocol HandleResponse HttpHandler
+  (handle-response
+    [handler exchange]
+    (.handleRequest handler exchange)
+    nil))
+
+;; Response HTTP 404 for `nil` response.
+(extend-protocol HandleResponse nil
+  (handle-response [_ exchange]
+    (-> ResponseCodeHandler/HANDLE_404 (.handleRequest exchange))))
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,

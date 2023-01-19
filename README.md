@@ -36,7 +36,7 @@ Clojure ring adapter to Undertow web server.
       got from request using functions from the `strojure.ring-undertow.request`
       namespace.
 
-- Ring [response][ring_response] allows `HttpHandler` in the `:body`, this
+- Ring [response][ring_response] can be an instance of `HttpHandler`, this
   allows to easily initiate processing like websocket handshake.
 
 ## Usage
@@ -168,8 +168,8 @@ see [Undertow server API][github_undertow].
 Websocket server handler can be setup without involving ring handlers like
 described in [Undertow server API][github_undertow].
 
-But it is also possible to return websocket handler in response `:body` to
-establish websocket connection.
+But it is also possible to return websocket handler as response to establish
+websocket connection.
 
 ```clojure
 (ns usage.websockets
@@ -187,8 +187,8 @@ establish websocket connection.
   "Ring handler initiating websocket connection."
   [request]
   (if (request/websocket? request)
-    {:body (handler/websocket {:on-message on-message})}
-    {:status 404}))
+    (handler/websocket {:on-message on-message})
+    {:status 400}))
 ```
 
 ### Request utility
