@@ -3,13 +3,14 @@
   (:require [clojure.java.io :as io]
             [strojure.ring-undertow.impl.session :as session]
             [strojure.undertow.api.exchange :as exchange])
-  (:import (clojure.lang IPersistentMap ISeq)
+  (:import (clojure.lang IBlockingDeref IPersistentMap ISeq)
            (io.undertow.io Sender)
            (io.undertow.server HttpHandler HttpServerExchange)
            (io.undertow.server.handlers ResponseCodeHandler)
            (java.io File InputStream OutputStream)
            (java.nio ByteBuffer)
-           (java.nio.charset Charset)))
+           (java.nio.charset Charset)
+           (java.util.concurrent TimeoutException)))
 
 (set! *warn-on-reflection* true)
 
@@ -116,10 +117,16 @@
 
   Also accepts other types of `response`:
 
-  - `io.undertow.server.HttpHandler` – invokes `.handleRequest` on this handler.
+  - `nil` – empty response.
+      + Responses with HTTP 404.
+
+  - `io.undertow.server.HttpHandler` – Undertow handler.
+      + Invokes `.handleRequest` on this handler.
       + This allows to initiate processing like websocket handshake.
 
-  - `nil` – responses with HTTP 404.
+  - `clojure.lang.IBlockingDeref` – future or promise.
+      + Executes pending response asynchronously with 120 sec timeout.
+      + This allows to initiate async execution from sync handler.
 
   Custom response types can be added by extending [[HandleResponse]] protocol.
 
@@ -136,6 +143,12 @@
     (when-some [body,,,,, (.valAt response :body)],,, (doto exchange ((send-response-fn body))))
     nil))
 
+;; Response HTTP 404 for `nil` response.
+(extend-protocol HandleResponse nil
+  (handle-response
+    [_ exchange]
+    (-> ResponseCodeHandler/HANDLE_404 (.handleRequest exchange))))
+
 ;; Allow to use any Undertow handler as response.
 (extend-protocol HandleResponse HttpHandler
   (handle-response
@@ -143,9 +156,16 @@
     (.handleRequest handler exchange)
     nil))
 
-;; Response HTTP 404 for `nil` response.
-(extend-protocol HandleResponse nil
-  (handle-response [_ exchange]
-    (-> ResponseCodeHandler/HANDLE_404 (.handleRequest exchange))))
+(extend-protocol HandleResponse IBlockingDeref
+  (handle-response
+    [pending exchange]
+    (exchange/async-dispatch exchange
+      (try
+        (let [response (.deref pending 120000 ::timeout)]
+          (if (identical? response ::timeout)
+            (exchange/async-throw exchange (TimeoutException. "Pending response timed out"))
+            (handle-response response exchange)))
+        (catch Throwable throwable
+          (exchange/async-throw exchange throwable))))))
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,

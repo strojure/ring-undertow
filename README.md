@@ -36,8 +36,15 @@ Clojure ring adapter to Undertow web server.
       got from request using functions from the `strojure.ring-undertow.request`
       namespace.
 
-- Ring [response][ring_response] can be an instance of `HttpHandler`, this
-  allows to easily initiate processing like websocket handshake.
+- Ring [response][ring_response] can be also an instance of custom type:
+
+    - Empty response `nil`, what causes HTTP 404 response.
+
+    - Undertow handler `io.undertow.server.HttpHandler`, what allows to easily
+      initiate processing like websocket handshake.
+
+    - Future or promise `clojure.lang.IBlockingDeref`, what allows to initiate
+      async execution from sync handler.
 
 ## Usage
 
