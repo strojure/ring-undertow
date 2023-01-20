@@ -156,6 +156,7 @@
     (.handleRequest handler exchange)
     nil))
 
+;; Execute `IBlockingDeref` response asynchronously with 120 sec timeout.
 (extend-protocol HandleResponse IBlockingDeref
   (handle-response
     [pending exchange]
