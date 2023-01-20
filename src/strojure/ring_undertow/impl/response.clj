@@ -162,9 +162,9 @@
     (exchange/async-dispatch exchange
       (try
         (let [response (.deref pending 120000 ::timeout)]
-          (if (identical? response ::timeout)
-            (exchange/async-throw exchange (TimeoutException. "Pending response timed out"))
-            (handle-response response exchange)))
+          (when (identical? response ::timeout)
+            (throw (TimeoutException. "Pending response timed out")))
+          (handle-response response exchange))
         (catch Throwable throwable
           (exchange/async-throw exchange throwable))))))
 

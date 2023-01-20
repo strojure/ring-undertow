@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 Release date `UNRELEASED`
 
+- Simplify throwing exception in `IBlockingDeref` response.
+
 ## `1.0.58-beta9`
 
 Release date `2023-01-19`
