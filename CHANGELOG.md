@@ -8,16 +8,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 Release date `UNRELEASED`
 
-- Simplify throwing exception in `IBlockingDeref` response.
+- Use `exchange.getRequestURI` for request `:uri`.
+- Revert changes incompatible with Ring middlewares:
+  > - Accept `HttpHandler` as response instead of handler in the `:body`.
+  > - Accept `IBlockingDeref` as response for async execution.
 
 ## `1.0.58-beta9`
 
 Release date `2023-01-19`
 
-- Use `exchange.getRequestPath` instead of `.getRequestURI` which can contains
-  host.
-- Accept `HttpHandler` as response instead of handler in the `:body`.
-- Accept `IBlockingDeref` as response for async execution.
+- ~~Use `exchange.getRequestPath` instead of `.getRequestURI` which can contains
+  host.~~
+- ~~Accept `HttpHandler` as response instead of handler in the `:body`.~~
+- ~~Accept `IBlockingDeref` as response for async execution.~~
 - Upgrade dependencies - strojure/undertow "1.0.72-rc2", zmap "1.2.11".
 
 ## `1.0.52-beta8`
@@ -40,8 +43,8 @@ Release date `2022-12-24`
 
 - Implement `server` namespace for convenient start/stop.
 - Rename handler functions:
-  - `handler/ring-sync` to `sync`;
-  - `handler/ring-async` to `async`.
+    - `handler/ring-sync` to `sync`;
+    - `handler/ring-async` to `async`.
 - Change declarative handler API for consistency with server configuration.
 
 ## `1.0.36-beta5`
