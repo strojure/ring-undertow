@@ -6,7 +6,9 @@
             [strojure.undertow.api.exchange :as exchange]
             [strojure.undertow.handler :as handler])
   (:import (clojure.lang MultiFn)
-           (io.undertow.server HttpHandler)))
+           (io.undertow.server HttpHandler)
+           (io.undertow.util WorkerUtils)
+           (java.util.concurrent TimeUnit TimeoutException)))
 
 (set! *warn-on-reflection* true)
 
@@ -31,20 +33,33 @@
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
 (defn async
-  "Returns HttpHandler for **asynchronous** [ring handler function][1].
+  "Returns HttpHandler for **asynchronous** [ring handler function][1] with
+  async `timeout` millis. Default timeout is `30000` millis.
 
   The function `handler-fn` takes three arguments: the request map, a response
   callback and an exception callback.
 
   [1]: https://github.com/ring-clojure/ring/wiki/Concepts#handlers
   "
-  [handler-fn]
-  (reify HttpHandler
-    (handleRequest [_ exchange]
-      (exchange/async-dispatch exchange
-        (handler-fn (request/build-request exchange)
-                    (fn handle-async [response] (response/handle-response response exchange))
-                    (partial exchange/async-throw exchange))))))
+  ([handler-fn] (async handler-fn 30000))
+  ([handler-fn, timeout-ms]
+   (reify HttpHandler
+     (handleRequest [_ exchange]
+       (let [timeout-task (^:once fn* [] (->> (str "Async ring response timeout: " timeout-ms " ms")
+                                              (TimeoutException.)
+                                              (exchange/async-throw exchange)))
+             timeout-key (-> (.getIoThread exchange)
+                             (WorkerUtils/executeAfter timeout-task timeout-ms
+                                                       TimeUnit/MILLISECONDS))]
+         (exchange/async-dispatch exchange
+           (handler-fn (request/build-request exchange)
+                       (fn handle-async [response]
+                         ;; Handle response only before timeout
+                         (when (.remove timeout-key)
+                           (response/handle-response response exchange)))
+                       (fn handle-error [throwable]
+                         (.remove timeout-key)
+                         (exchange/async-throw exchange throwable)))))))))
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
