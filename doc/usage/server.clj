@@ -22,14 +22,14 @@
       (:body (client/get (str "http://localhost:" port "/"))))))
 
 ;; Synchronous ring handler
-(run (server/start {:port 8080
+(run (server/start {:port 0
                     :handler ring-handler}))
 ;; or
-(run (server/start {:port 8080
+(run (server/start {:port 0
                     :handler ring-handler
                     :ring-handler-type :sync}))
 
 ;; Asynchronous ring handler
-(run (server/start {:port 8080
+(run (server/start {:port 0
                     :handler ring-handler
                     :ring-handler-type :async}))

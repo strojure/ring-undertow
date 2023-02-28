@@ -1,6 +1,7 @@
 (ns usage.handlers
   (:require [clj-http.client :as client]
             [strojure.ring-undertow.handler :as ring.handler]
+            [strojure.undertow.api.types :as types]
             [strojure.undertow.server :as server]))
 
 (defn ring-handler
@@ -18,8 +19,10 @@
   "Helper function to start server with `config`, execute HTTP request, stop
   server, return response body."
   [config]
-  (with-open [_ (server/start (assoc config :port 8080))]
-    (:body (client/get "http://localhost:8080/"))))
+  (with-open [server (server/start (assoc config :port 0))]
+    (:body (client/get (str "http://localhost:"
+                            (-> server types/bean* :listenerInfo first :address :port)
+                            "/")))))
 
 ;; ## Explicit invocation of handler function
 
