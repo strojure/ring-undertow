@@ -1,5 +1,5 @@
 (ns usage.server
-  (:require [clj-http.client :as client]
+  (:require [java-http-clj.core :as http]
             [strojure.ring-undertow.server :as server]
             [strojure.undertow.api.types :as types]))
 
@@ -19,7 +19,7 @@
   [server]
   (with-open [_ server]
     (let [port (-> server types/bean* :listenerInfo first :address :port)]
-      (:body (client/get (str "http://localhost:" port "/"))))))
+      (:body (http/send {:uri (str "http://localhost:" port "/")})))))
 
 ;; Synchronous ring handler
 (run (server/start {:port 0

@@ -1,5 +1,5 @@
 (ns usage.handlers
-  (:require [clj-http.client :as client]
+  (:require [java-http-clj.core :as http]
             [strojure.ring-undertow.handler :as ring.handler]
             [strojure.undertow.api.types :as types]
             [strojure.undertow.server :as server]))
@@ -20,9 +20,9 @@
   server, return response body."
   [config]
   (with-open [server (server/start (assoc config :port 0))]
-    (:body (client/get (str "http://localhost:"
-                            (-> server types/bean* :listenerInfo first :address :port)
-                            "/")))))
+    (:body (http/send {:uri (str "http://localhost:"
+                                 (-> server types/bean* :listenerInfo first :address :port)
+                                 "/")}))))
 
 ;; ## Explicit invocation of handler function
 

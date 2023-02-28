@@ -49,7 +49,7 @@ server. The [start][cljdoc_server_start] function enables ring handler adapter
 
 ```clojure
 (ns usage.server
-  (:require [clj-http.client :as client]
+  (:require [java-http-clj.core :as http]
             [strojure.ring-undertow.server :as server]
             [strojure.undertow.api.types :as types]))
 
@@ -69,7 +69,7 @@ server. The [start][cljdoc_server_start] function enables ring handler adapter
   [server]
   (with-open [_ server]
     (let [port (-> server types/bean* :listenerInfo first :address :port)]
-      (:body (client/get (str "http://localhost:" port "/"))))))
+      (:body (http/send {:uri (str "http://localhost:" port "/")})))))
 
 ;; Synchronous ring handler
 (run (server/start {:port 0
@@ -94,10 +94,10 @@ see [Undertow server API][github_undertow].
 
 ```clojure
 (ns usage.handlers
-  (:require 
-    [clj-http.client :as client]
-    [strojure.ring-undertow.handler :as ring.handler]
-    [strojure.undertow.server :as server]))
+  (:require [java-http-clj.core :as http]
+            [strojure.ring-undertow.handler :as ring.handler]
+            [strojure.undertow.api.types :as types]
+            [strojure.undertow.server :as server]))
 
 (defn ring-handler
   "The ring handler function, both sync and async."
@@ -114,8 +114,10 @@ see [Undertow server API][github_undertow].
   "Helper function to start server with `config`, execute HTTP request, stop
   server, return response body."
   [config]
-  (with-open [_ (server/start (assoc config :port 8080))]
-    (:body (client/get "http://localhost:8080/"))))
+  (with-open [server (server/start (assoc config :port 0))]
+    (:body (http/send {:uri (str "http://localhost:"
+                                 (-> server types/bean* :listenerInfo first :address :port)
+                                 "/")}))))
 
 ;; ## Explicit invocation of handler function
 

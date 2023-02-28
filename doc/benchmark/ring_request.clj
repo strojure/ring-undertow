@@ -1,9 +1,10 @@
 (ns benchmark.ring-request
-  (:require [clj-http.client :as client]
-            [immutant.web.internal.ring :as immutant]
+  (:require [immutant.web.internal.ring :as immutant]
             [immutant.web.internal.undertow]
+            [java-http-clj.core :as http]
             [ring.adapter.undertow.request :as luminus]
             [strojure.ring-undertow.impl.request :as impl]
+            [strojure.undertow.api.types :as types]
             [strojure.undertow.handler :as handler]
             [strojure.undertow.server :as server]
             [strojure.zmap.core :as zmap])
@@ -26,12 +27,14 @@
    "Accept",,,,,,,,, "text/html, application/xhtml+xml, application/xml ;q=0.9,image/avif,image/webp,*/*;q=0.8"
    "Accept-Language" "ru, en ;q=0.8,de;q=0.6,uk;q=0.4,be;q=0.2"
    "Accept-Encoding" "gzip, deflate, br"
-   "Connection",,,,, "keep-alive"
    "Cookie",,,,,,,,, "secret=dfe83f04-2d13-4914-88dd-5005ac317936"
    "Upgrade-Insecure-Requests" "1"})
 
-(with-open [_ (server/start {:handler -handler :port 9080})]
-  (client/get "http://localhost:9080/path?param=value" {:headers -request-headers})
+(with-open [server (server/start {:handler -handler :port 0})]
+  (http/send {:uri (str "http://localhost:"
+                        (-> server types/bean* :listenerInfo first :address :port)
+                        "/path?param=value")
+              :headers -request-headers})
   (println "\nServer exchange:" -exchange "\n"))
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,

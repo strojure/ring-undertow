@@ -13,7 +13,7 @@
                                        [luminus/ring-undertow-adapter "1.3.0"]
                                        [org.immutant/web "2.1.10"]
                                        ;; Testing HTTP requests
-                                       [clj-http "3.12.3"]]
+                                       [java-http-clj "0.4.3"]]
                         :source-paths ["doc"]}}
 
   :deploy-repositories [["clojars" {:url "https://clojars.org/repo" :sign-releases false}]])
