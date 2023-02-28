@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 Release date `UNRELEASED`
 
 - Implement timeout for async ring handler.
+- Upgrade deps - undertow 1.0.88, zmap 1.3.18.
 
 ## `1.0.65-beta10`
 
