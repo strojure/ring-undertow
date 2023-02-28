@@ -38,7 +38,7 @@
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-;;; Smaller header map.
+;; ## Smaller header map
 
 (impl/header-map-proxy -headers-7)
 ;             Execution time mean : 12,595231 ns
@@ -60,7 +60,7 @@
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-;;; Larger header map
+;; ## Larger header map
 
 (impl/header-map-proxy -headers-9)
 ;             Execution time mean : 12,977983 ns
@@ -82,7 +82,7 @@
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-;;; Get header value + conversion
+;; ## Get header value + conversion
 
 (-> (impl/header-map-proxy -headers-9)
     (get "cookie"))

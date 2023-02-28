@@ -39,7 +39,7 @@
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-;;; Build request
+;; ## Build request
 
 (comment
   (impl/build-request -exchange)
@@ -64,7 +64,7 @@
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-;;; Build request + add 1 key
+;; ## Build request + add 1 key
 
 (comment
   (-> (impl/build-request -exchange)
@@ -91,7 +91,7 @@
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-;;; Build request + get header
+;; ## Build request + get header
 
 (comment
   (-> (impl/build-request -exchange)
@@ -118,7 +118,7 @@
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-;;; Various operations with exchange
+;; ## Various operations with exchange
 
 (comment
   (.getRequestHeaders -exchange)
