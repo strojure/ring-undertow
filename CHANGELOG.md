@@ -14,6 +14,7 @@ Release date `UNRELEASED`
 - [ test ] - Add ring request tests.
 - [ test ] - Add ring response tests.
 - [ session ] - Overwrite ring session data accordingly to spec.
+- [ test ] - Add ring session tests.
 
 ## `1.0.65-beta10`
 
