@@ -21,26 +21,21 @@
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-(defn put-session-entries
-  "Puts [ring session][1] `entries` into Undertow session storage.
+;; TODO: Handle session `:recreate`
 
-  - When `entries` is `nil` then session data is removed.
-  - When entry value is `nil` then this entry is unset from the session data.
-  - Otherwise entry is set in session data.
+(defn put-session
+  "Puts [ring session][1] `data` into Undertow session storage or remove it if
+  `data` is null.
 
   Raises exception if session storage is not initialized in server configuration
   and session values cannot be set.
 
   [1]: https://github.com/ring-clojure/ring/wiki/Sessions
   "
-  [exchange, entries]
+  [exchange, data]
   (if-let [session (exchange/get-or-create-session exchange)]
-    (.setAttribute session ring-session-key
-                   (some->> entries (reduce-kv (fn [data k v]
-                                                 (if (some? v) (assoc data k v)
-                                                               (dissoc data k)))
-                                               (.getAttribute session ring-session-key))))
-    (when entries
+    (.setAttribute session ring-session-key data)
+    (when data
       (throw (ex-info "Attempt to put session entries when sessions are disabled"
                       {:server-exchange exchange})))))
 

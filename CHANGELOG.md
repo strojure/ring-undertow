@@ -13,6 +13,7 @@ Release date `UNRELEASED`
 - Add type hint to `server/start`.
 - [ test ] - Add ring request tests.
 - [ test ] - Add ring response tests.
+- [ session ] - Overwrite ring session data accordingly to spec.
 
 ## `1.0.65-beta10`
 

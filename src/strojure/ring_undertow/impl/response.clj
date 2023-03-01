@@ -125,7 +125,7 @@
   (when response
     (when-some [headers,, (.valAt response :headers)] (doto exchange (put-headers headers)))
     (when-some [status,,, (.valAt response :status)], (doto exchange (.setStatusCode status)))
-    (when-some [session (.entryAt response :session)] (doto exchange (session/put-session-entries (val session))))
+    (when-some [session (.entryAt response :session)] (doto exchange (session/put-session (val session))))
     (when-some [body,,,,, (.valAt response :body)],,, (doto exchange ((send-response-fn body)))))
   nil)
 
