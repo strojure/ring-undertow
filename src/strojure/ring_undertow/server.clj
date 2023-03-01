@@ -2,7 +2,8 @@
   "Server's start/stop functionality with ring handler adapter."
   (:require [strojure.ring-undertow.handler :as ring.handler]
             [strojure.undertow.api.types :as types]
-            [strojure.undertow.server :as server]))
+            [strojure.undertow.server :as server])
+  (:import (strojure.undertow.api.types ServerInstance)))
 
 (set! *warn-on-reflection* true)
 
@@ -26,6 +27,7 @@
 
   [1]: https://cljdoc.org/d/com.github.strojure/undertow/CURRENT/api/strojure.undertow.server#start
   "
+  {:tag ServerInstance}
   [config]
   (binding [types/*handler-fn-adapter* (ring.handler/adapter config)]
     (server/start config)))
