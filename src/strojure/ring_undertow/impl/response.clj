@@ -84,8 +84,7 @@
 (extend-protocol ResponseBody File
   (send-response-fn
     [file]
-    ;; TODO: Test charset for File response
-    (with-output-stream (fn send-file [output, charset-fn]
+    (with-output-stream (fn send-file [output, _]
                           (with-open [input (io/input-stream file)]
                             (io/copy input output))))))
 

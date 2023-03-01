@@ -11,6 +11,8 @@ Release date `UNRELEASED`
 - Implement timeout for async ring handler.
 - Upgrade deps - undertow 1.0.88, zmap 1.3.18.
 - Add type hint to `server/start`.
+- [ test ] - Add ring request tests.
+- [ test ] - Add ring response tests.
 
 ## `1.0.65-beta10`
 
