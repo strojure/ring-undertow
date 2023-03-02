@@ -4,20 +4,26 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## `1.0.66-SNAPSHOT`
+## `1.0.82-SNAPSHOT`
 
 Release date `UNRELEASED`
 
-- Implement timeout for async ring handler.
-- Upgrade deps - undertow 1.0.88, zmap 1.3.18.
-- Add type hint to `server/start`.
+
+
+## `1.0.81`
+
+Release date `2023-03-02`
+
+- [ impl ] - Implement timeout for async ring handler.
+- [ impl ] - Add type hint to `server/start`.
+- [ impl ] - Handle nil :body.
+- [ session ] - Overwrite ring session data accordingly to spec.
+- [ session ] - Handle :recreate meta, unbind session on delete.
 - [ test ] - Add ring request tests.
 - [ test ] - Add ring response tests.
-- [ session ] - Overwrite ring session data accordingly to spec.
 - [ test ] - Add ring session tests.
-- [ session ] - Handle :recreate meta, unbind session on delete.
-- [ impl ] - Handle nil :body.
 - [ test ] - Add server tests.
+- [ deps ] - Upgrade undertow 1.0.88, zmap 1.3.18.
 
 ## `1.0.65-beta10`
 
