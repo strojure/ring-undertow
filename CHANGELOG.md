@@ -17,6 +17,7 @@ Release date `UNRELEASED`
 - [ test ] - Add ring session tests.
 - [ session ] - Handle :recreate meta, unbind session on delete.
 - [ impl ] - Handle nil :body.
+- [ test ] - Add server tests.
 
 ## `1.0.65-beta10`
 
