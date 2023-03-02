@@ -95,6 +95,13 @@
     (fn [exchange]
       (.handleRequest handler exchange))))
 
+;; Handle empty response.
+(extend-protocol ResponseBody nil
+  (send-response-fn
+    [_]
+    (fn [exchange]
+      (.endExchange exchange))))
+
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
 (defn handle-response
@@ -125,8 +132,9 @@
   (when response
     (when-some [headers,, (.valAt response :headers)] (doto exchange (put-headers headers)))
     (when-some [status,,, (.valAt response :status)], (doto exchange (.setStatusCode status)))
-    (when-some [session (.entryAt response :session)] (doto exchange (session/put-session (val session))))
-    (when-some [body,,,,, (.valAt response :body)],,, (doto exchange ((send-response-fn body)))))
+    (when-some [session (.entryAt response :session)] (doto exchange (session/put-session (val session)))))
+  (doto exchange
+    ((send-response-fn (some-> response (.valAt :body)))))
   nil)
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,

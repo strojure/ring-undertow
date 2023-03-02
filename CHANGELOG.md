@@ -16,6 +16,7 @@ Release date `UNRELEASED`
 - [ session ] - Overwrite ring session data accordingly to spec.
 - [ test ] - Add ring session tests.
 - [ session ] - Handle :recreate meta, unbind session on delete.
+- [ impl ] - Handle nil :body.
 
 ## `1.0.65-beta10`
 
