@@ -10,13 +10,13 @@
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-(defn- req
-  "Executes HTTP request and returns corresponding ring request."
-  [{:keys [method, uri, headers, body] :or {method :get, uri "/", headers {}}}]
+(defn- exec
+  "Executes HTTP request and returns map `{:request request}` with corresponding
+  ring request on server side."
+  [{:keys [method, uri, headers, body, request-fn] :or {method :get, uri "/", headers {}}}]
   (let [request-promise (promise)
-        handler (fn [{:keys [body] :as request}]
-                  (deliver request-promise (cond-> request
-                                             body (assoc ::body-content (slurp body))))
+        handler (fn [request]
+                  (deliver request-promise (cond-> request request-fn (request-fn)))
                   {:status 200})]
     (with-open [server (server/start {:handler handler :port 0})]
       (http/send {:method method
@@ -25,7 +25,13 @@
                             uri)
                   :headers headers
                   :body body}))
-    @request-promise))
+    {:request @request-promise}))
+
+(defn- read-body-content
+  "A request-fn for exec to read :body stream and assoc it as :body-content into
+  request."
+  [{:keys [body] :as request}]
+  (assoc request :body-content (some-> body (slurp))))
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
@@ -34,14 +40,14 @@
   (testing "Request without :body"
 
     (test/is (= #{:headers :remote-addr :request-method :scheme :server-name :server-port :uri}
-                (->> (req {:method :get})
-                     (keys)
+                (->> (exec {:method :get})
+                     :request (keys)
                      (filter #{:headers :remote-addr :request-method :scheme :server-name :server-port :uri})
                      (set))))
 
     (test/is (= #{:headers :remote-addr :request-method :scheme :server-name :server-port :uri}
-                (->> (req {:method :post})
-                     (keys)
+                (->> (exec {:method :post})
+                     :request (keys)
                      (filter #{:headers :remote-addr :request-method :scheme :server-name :server-port :uri})
                      (set))))
 
@@ -50,14 +56,14 @@
   (testing "Request with :body"
 
     (test/is (= #{:body :headers :remote-addr :request-method :scheme :server-name :server-port :uri}
-                (->> (req {:method :get, :body "body"})
-                     (keys)
+                (->> (exec {:method :get, :body "body"})
+                     :request (keys)
                      (filter #{:body :headers :remote-addr :request-method :scheme :server-name :server-port :uri})
                      (set))))
 
     (test/is (= #{:body :headers :remote-addr :request-method :scheme :server-name :server-port :uri}
-                (->> (req {:method :post, :body "body"})
-                     (keys)
+                (->> (exec {:method :post, :body "body"})
+                     :request (keys)
                      (filter #{:body :headers :remote-addr :request-method :scheme :server-name :server-port :uri})
                      (set))))
 
@@ -66,8 +72,8 @@
   (testing "Request with :query-string"
 
     (test/is (= #{:query-string :headers :remote-addr :request-method :scheme :server-name :server-port :uri}
-                (->> (req {:uri "/?param=value"})
-                     (keys)
+                (->> (exec {:uri "/?param=value"})
+                     :request (keys)
                      (filter #{:query-string :headers :remote-addr :request-method :scheme :server-name :server-port :uri})
                      (set))))
 
@@ -78,63 +84,63 @@
 (deftest request-scheme-t
 
   (test/is (= :http
-              (:scheme (req {:method :get}))))
+              (:scheme (:request (exec {:method :get})))))
 
   )
 
 (deftest request-method-t
 
   (test/is (= :get
-              (:request-method (req {:method :get}))))
+              (:request-method (:request (exec {:method :get})))))
 
   (test/is (= :post
-              (:request-method (req {:method :post}))))
+              (:request-method (:request (exec {:method :post})))))
 
   )
 
 (deftest request-uri-t
 
   (test/is (= "/"
-              (:uri (req {:uri "/"}))))
+              (:uri (:request (exec {:uri "/"})))))
 
   (test/is (= "/path"
-              (:uri (req {:uri "/path"}))))
+              (:uri (:request (exec {:uri "/path"})))))
 
   (test/is (= "/path"
-              (:uri (req {:uri "/path?param=value"}))))
+              (:uri (:request (exec {:uri "/path?param=value"})))))
 
   )
 
 (deftest request-query-string-t
 
   (test/is (= nil
-              (:query-string (req {:uri "/"}))))
+              (:query-string (:request (exec {:uri "/"})))))
 
   (test/is (= nil
-              (:query-string (req {:uri "/path"}))))
+              (:query-string (:request (exec {:uri "/path"})))))
 
   (test/is (= nil
-              (:query-string (req {:uri "/path?"}))))
+              (:query-string (:request (exec {:uri "/path?"})))))
 
   (test/is (= "param=value"
-              (:query-string (req {:uri "/path?param=value"}))))
+              (:query-string (:request (exec {:uri "/path?param=value"})))))
 
   )
 
 (deftest request-headers-t
 
   (test/is (= nil
-              (-> (:headers (req {:headers {}}))
+              (-> (:headers (:request (exec {:headers {}})))
                   (get "x-test-header"))))
 
   (test/is (= "test"
-              (-> (:headers (req {:headers {"X-Test-Header" "test"}}))
+              (-> (:headers (:request (exec {:headers {"X-Test-Header" "test"}})))
                   (get "x-test-header"))))
 
   (testing "case insensitivity (non-standard)"
 
     (test/is (= "test"
-                (-> (:headers (req {:headers {"X-Test-Header" "test"}}))
+                (-> (:headers (:request (exec {:headers {"X-Test-Header" "test"}})))
                     (get "X-Test-Header"))))
 
     )
@@ -144,16 +150,20 @@
 (deftest request-body-t
 
   (test/is (= nil
-              (::body-content (req {:method :get}))))
+              (:body-content (:request (exec {:method :get
+                                               :request-fn read-body-content})))))
 
   (test/is (= "body"
-              (::body-content (req {:method :get, :body "body"}))))
+              (:body-content (:request (exec {:method :get, :body "body"
+                                               :request-fn read-body-content})))))
 
   (test/is (= nil
-              (::body-content (req {:method :post}))))
+              (:body-content (:request (exec {:method :post
+                                               :request-fn read-body-content})))))
 
   (test/is (= "body"
-              (::body-content (req {:method :post, :body "body"}))))
+              (:body-content (:request (exec {:method :post, :body "body"
+                                               :request-fn read-body-content})))))
 
   )
 

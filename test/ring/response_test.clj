@@ -15,35 +15,34 @@
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-(defn- t
-  "Executes HTTP request and returns HTTP response."
-  [{:keys [handler, response, method, uri, headers, body, wrap-handler]
-    :or {response {}, method :get, uri "/", headers {}}}]
-  (with-open [server (server/start {:handler (cond-> (or handler (constantly response))
-                                               (vector? wrap-handler) (->> (conj wrap-handler)))
-                                    :port 0})]
-    (http/send {:method method
-                :uri (str "http://localhost:"
-                          (-> server types/bean* :listenerInfo first :address :port)
-                          uri)
-                :headers headers
-                :body body})))
+(defn- exec
+  "Executes HTTP request and returns map `{:response response}` with HTTP
+  response."
+  [{:keys [handler, method, uri, headers, body]
+    :or {handler (constantly {}) method :get, uri "/", headers {}}}]
+  (with-open [server (server/start {:handler handler :port 0})]
+    {:response (http/send {:method method
+                           :uri (str "http://localhost:"
+                                     (-> server types/bean* :listenerInfo first :address :port)
+                                     uri)
+                           :headers headers
+                           :body body})}))
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
 (deftest response-status-t
 
   (test/is (= 200
-              (:status (t {}))))
+              (:status (:response (exec {})))))
 
   (test/is (= 200
-              (:status (t {:response {:status 200}}))))
+              (:status (:response (exec {:handler (constantly {:status 200})})))))
 
   (test/is (= 404
-              (:status (t {:response {:status 404}}))))
+              (:status (:response (exec {:handler (constantly {:status 404})})))))
 
   (test/is (= 500
-              (:status (t {:response {:status 500}}))))
+              (:status (:response (exec {:handler (constantly {:status 500})})))))
 
   )
 
@@ -52,7 +51,7 @@
   (testing "String"
 
     (test/is (= "body"
-                (:body (t {:response {:body "body"}}))))
+                (:body (:response (exec {:handler (constantly {:body "body"})})))))
 
     )
 
@@ -61,18 +60,21 @@
     (testing "UTF-8 charset"
 
       (test/is (= "body"
-                  (:body (t {:response {:body (-> "body" (.getBytes "UTF-8") (ByteArrayInputStream.))}}))))
+                  (:body (:response (exec {:handler (constantly {:body (-> "body" (.getBytes "UTF-8")
+                                                                           (ByteArrayInputStream.))})})))))
 
       (test/is (= "привет"
-                  (:body (t {:response {:body (-> "привет" (.getBytes "UTF-8") (ByteArrayInputStream.))}}))))
+                  (:body (:response (exec {:handler (constantly {:body (-> "привет" (.getBytes "UTF-8")
+                                                                           (ByteArrayInputStream.))})})))))
 
       )
 
     (testing "Not UTF-8 charset"
 
       (test/is (= "привет"
-                  (:body (t {:response {:body (-> "привет" (.getBytes "Windows-1251") (ByteArrayInputStream.))
-                                        :headers {"Content-Type" "text/plain; charset=Windows-1251"}}}))))
+                  (:body (:response (exec {:handler (constantly {:body (-> "привет" (.getBytes "Windows-1251")
+                                                                           (ByteArrayInputStream.))
+                                                                 :headers {"Content-Type" "text/plain; charset=Windows-1251"}})})))))
 
       )
 
@@ -81,37 +83,37 @@
   (testing "ISeq - Each element of the seq is sent to the client as a string."
 
     (test/is (= "body"
-                (:body (t {:response {:body (seq ["b" "o" "d" "y"])}}))))
+                (:body (:response (exec {:handler (constantly {:body (seq ["b" "o" "d" "y"])})})))))
 
     (test/is (= "body"
-                (:body (t {:response {:body (seq [\b \o \d \y])}}))))
+                (:body (:response (exec {:handler (constantly {:body (seq [\b \o \d \y])})})))))
 
     )
 
   (testing "File - The contents of the referenced file is sent to the client."
 
     (test/is (= "response body from file"
-                (:body (t {:response {:body (io/file "test/ring/response_test.utf-8.txt")}}))))
+                (:body (:response (exec {:handler (constantly {:body (io/file "test/ring/response_test.utf-8.txt")})})))))
 
     (test/is (= "response body from file: привет"
-                (:body (t {:response {:body (io/file "test/ring/response_test.windows-1251.txt")
-                                      :headers {"Content-Type" "text/plain; charset=Windows-1251"}}}))))
+                (:body (:response (exec {:handler (constantly {:body (io/file "test/ring/response_test.windows-1251.txt")
+                                                               :headers {"Content-Type" "text/plain; charset=Windows-1251"}})})))))
 
     )
 
   (testing "ByteBuffer (non-standard)"
 
     (test/is (= "body"
-                (:body (t {:response {:body (-> "body" (.getBytes "UTF-8") (ByteBuffer/wrap))}}))))
+                (:body (:response (exec {:handler (constantly {:body (-> "body" (.getBytes "UTF-8") (ByteBuffer/wrap))})})))))
 
     )
 
   (testing "HttpHandler (non-standard)"
 
     (test/is (= "body"
-                (:body (t {:response {:body (reify HttpHandler (handleRequest [_ exchange]
-                                                                 (doto (.getResponseSender exchange)
-                                                                   (.send "body"))))}}))))
+                (:body (:response (exec {:handler (constantly {:body (reify HttpHandler (handleRequest [_ exchange]
+                                                                                          (doto (.getResponseSender exchange)
+                                                                                            (.send "body"))))})})))))
 
     )
 
@@ -122,23 +124,23 @@
   (testing "Set header."
 
     (test/is (= "test-header"
-                (-> (t {:response {:headers {"X-Test-Header" "test-header"}}})
-                    :headers
+                (-> (exec {:handler (constantly {:headers {"X-Test-Header" "test-header"}})})
+                    :response :headers
                     (get "x-test-header"))))
 
     (test/is (= nil
-                (-> (t {:response {:headers {"X-Test-Header" nil}}})
-                    :headers
+                (-> (exec {:handler (constantly {:headers {"X-Test-Header" nil}})})
+                    :response :headers
                     (get "x-test-header"))))
 
     (test/is (= ["1" "2" "3"]
-                (-> (t {:response {:headers {"X-Test-Header" ["1" "2" "3"]}}})
-                    :headers
+                (-> (exec {:handler (constantly {:headers {"X-Test-Header" ["1" "2" "3"]}})})
+                    :response :headers
                     (get "x-test-header"))))
 
     (test/is (= ["1" "2" "3"]
-                (-> (t {:response {:headers {"X-Test-Header" (seq ["1" "2" "3"])}}})
-                    :headers
+                (-> (exec {:handler (constantly {:headers {"X-Test-Header" (seq ["1" "2" "3"])}})})
+                    :response :headers
                     (get "x-test-header"))))
 
     )
@@ -146,17 +148,15 @@
   (testing "Remove header set by server middleware (non-standard)."
 
     (test/is (= "test-header"
-                (-> (t {:wrap-handler [{:type handler/set-response-header
-                                        :header {"X-Test-Header" "test-header"}}]
-                        :response {}})
-                    :headers
+                (-> (exec {:handler [{:header {"X-Test-Header" "test-header"} :type handler/set-response-header}
+                                     (constantly {})]})
+                    :response :headers
                     (get "x-test-header"))))
 
     (test/is (= nil
-                (-> (t {:wrap-handler [{:type handler/set-response-header
-                                        :header {"X-Test-Header" "test-header"}}]
-                        :response {:headers {"X-Test-Header" nil}}})
-                    :headers
+                (-> (exec {:handler [{:header {"X-Test-Header" "test-header"} :type handler/set-response-header}
+                                     (constantly {:headers {"X-Test-Header" nil}})]})
+                    :response :headers
                     (get "x-test-header"))))
 
     )

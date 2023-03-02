@@ -12,13 +12,16 @@
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-(defn- req
-  "Executes series of HTTP request and returns last ring request."
-  [& responses]
-  (let [request! (atom nil)
+(defn- exec
+  "Executes seq of ring handlers and returns seq of `{:request _ :response _}`
+  on server side."
+  [{:keys [handlers]}]
+  (let [result! (atom [])
         handler (fn [request]
-                  (reset! request! request)
-                  (nth responses (-> request :headers (get "x-response-num") parse-long)))
+                  (let [handler (nth handlers (-> request :headers (get "x-response-num") parse-long))
+                        response (handler request)]
+                    (swap! result! conj {:request request :response response})
+                    response))
         http-opts {:client (http/build-client {:cookie-handler (CookieManager.)})}]
     (with-open [server (server/start {:handler [{:type handler/session}
                                                 handler]
@@ -26,10 +29,10 @@
       (let [uri (str "http://localhost:"
                      (-> server types/bean* :listenerInfo first :address :port)
                      "/")]
-        (doseq [i (range (count responses))]
+        (doseq [i (range (count handlers))]
           (http/send {:uri uri :headers {"x-response-num" (str i)}}
                      http-opts))))
-    @request!))
+    @result!))
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
@@ -38,29 +41,29 @@
   (testing "Set session."
 
     (test/is (= nil
-                (:session (req {:session {:a 1}}))))
+                (:session (:request (last (exec {:handlers [(constantly {:session {:a 1}})]}))))))
 
     (test/is (= {:a 1}
-                (:session (req {:session {:a 1}}
-                               {}))))
+                (:session (:request (last (exec {:handlers [(constantly {:session {:a 1}})
+                                                            (constantly {})]}))))))
 
     )
 
   (testing "Delete session."
 
     (test/is (= nil
-                (:session (req {:session {:a 1}}
-                               {:session nil}
-                               {}))))
+                (:session (:request (last (exec {:handlers [(constantly {:session {:a 1}})
+                                                            (constantly {:session nil})
+                                                            (constantly {})]}))))))
 
     )
 
   (testing "Update (overwrite) session."
 
     (test/is (= {:b 2}
-                (:session (req {:session {:a 1}}
-                               {:session {:b 2}}
-                               {}))))
+                (:session (:request (last (exec {:handlers [(constantly {:session {:a 1}})
+                                                            (constantly {:session {:b 2}})
+                                                            (constantly {})]}))))))
 
     )
 
