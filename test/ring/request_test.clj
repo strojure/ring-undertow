@@ -151,19 +151,19 @@
 
   (test/is (= nil
               (:body-content (:request (exec {:method :get
-                                               :request-fn read-body-content})))))
+                                              :request-fn read-body-content})))))
 
   (test/is (= "body"
               (:body-content (:request (exec {:method :get, :body "body"
-                                               :request-fn read-body-content})))))
+                                              :request-fn read-body-content})))))
 
   (test/is (= nil
               (:body-content (:request (exec {:method :post
-                                               :request-fn read-body-content})))))
+                                              :request-fn read-body-content})))))
 
   (test/is (= "body"
               (:body-content (:request (exec {:method :post, :body "body"
-                                               :request-fn read-body-content})))))
+                                              :request-fn read-body-content})))))
 
   )
 

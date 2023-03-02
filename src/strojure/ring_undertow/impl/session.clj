@@ -21,11 +21,10 @@
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
-;; TODO: Handle session `:recreate`
-
 (defn put-session
   "Puts [ring session][1] `data` into Undertow session storage or remove it if
-  `data` is null.
+  `data` is null. Changes session identifier if `(-> data meta :recreate)` is
+  `true`.
 
   Raises exception if session storage is not initialized in server configuration
   and session values cannot be set.
@@ -33,10 +32,17 @@
   [1]: https://github.com/ring-clojure/ring/wiki/Sessions
   "
   [exchange, data]
-  (if-let [session (exchange/get-or-create-session exchange)]
-    (.setAttribute session ring-session-key data)
-    (when data
+  (if (some? data)
+    ;; Put non-nil data into session.
+    (if-let [session (exchange/get-or-create-session exchange)]
+      (do (.setAttribute session ring-session-key data)
+          ;; Change session identifier if :recreate meta is true.
+          (when (some-> (meta data) :recreate)
+            (.changeSessionId session exchange (exchange/get-session-config exchange))))
       (throw (ex-info "Attempt to put session entries when sessions are disabled"
-                      {:server-exchange exchange})))))
+                      {:server-exchange exchange})))
+    ;; Destroy session if `data` is nil.
+    (some-> (exchange/get-existing-session exchange)
+            (.invalidate exchange))))
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,

@@ -56,6 +56,14 @@
                                                             (constantly {:session nil})
                                                             (constantly {})]}))))))
 
+    (testing "Delete session cookie when session deleted."
+      (test/is (= nil
+                  (-> (last (exec {:handlers [(constantly {:session {:a 1}})
+                                              (constantly {:session nil})
+                                              (constantly {})]}))
+                      :request :headers
+                      (get "cookie")))))
+
     )
 
   (testing "Update (overwrite) session."
@@ -64,6 +72,34 @@
                 (:session (:request (last (exec {:handlers [(constantly {:session {:a 1}})
                                                             (constantly {:session {:b 2}})
                                                             (constantly {})]}))))))
+
+    (test/is (= {:a 2}
+                (:session (:request (last (exec {:handlers [(constantly {:session {:a 1}})
+                                                            (fn [{:keys [session]}]
+                                                              {:session (update session :a inc)})
+                                                            (constantly {})]}))))))
+
+    )
+
+  (testing "Recreate (rename) session."
+
+    (testing "Session ID does not change."
+      (test/is (= 1 #_"number of unique non-nil cookie headers"
+                  (->> (exec {:handlers [(constantly {:session {:a 1}})
+                                         (constantly {:session {:a 1}})
+                                         (constantly {})]})
+                       (keep (comp #(get % "cookie") :headers :request))
+                       (distinct)
+                       (count)))))
+
+    (testing "Session ID changes."
+      (test/is (= 2 #_"number of unique non-nil cookie headers"
+                  (->> (exec {:handlers [(constantly {:session {:a 1}})
+                                         (constantly {:session ^:recreate {:a 1}})
+                                         (constantly {})]})
+                       (keep (comp #(get % "cookie") :headers :request))
+                       (distinct)
+                       (count)))))
 
     )
 
