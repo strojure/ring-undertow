@@ -100,7 +100,7 @@
   (send-response-fn
     [_]
     (fn [exchange]
-      (.endExchange exchange))))
+      (.endExchange ^HttpServerExchange exchange))))
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
