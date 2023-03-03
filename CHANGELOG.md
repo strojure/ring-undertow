@@ -4,9 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## `1.0.82-SNAPSHOT`
+## `1.0.87-SNAPSHOT`
 
 Release date `UNRELEASED`
+
+
+
+## `1.0.86`
+
+Release date `2023-03-03`
 
 - [ impl ] - Handle nil :body - Add type hint to fix reflection warning.
 - [ test ] - Add tests for request helper functions.
