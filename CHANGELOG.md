@@ -10,6 +10,7 @@ Release date `UNRELEASED`
 
 - [ impl ] - Handle nil :body - Add type hint to fix reflection warning.
 - [ test ] - Add tests for request helper functions.
+- [ test ] - Test async handler timeout.
 
 ## `1.0.81`
 
