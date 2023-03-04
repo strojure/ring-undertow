@@ -14,24 +14,24 @@ Release date `UNRELEASED`
 
 Release date `2023-03-03`
 
-- [ impl ] - Handle nil :body - Add type hint to fix reflection warning.
-- [ test ] - Add tests for request helper functions.
-- [ test ] - Test async handler timeout.
+- \[ impl ] - Handle nil :body - Add type hint to fix reflection warning.
+- \[ test ] - Add tests for request helper functions.
+- \[ test ] - Test async handler timeout.
 
 ## `1.0.81`
 
 Release date `2023-03-02`
 
-- [ impl ] - Implement timeout for async ring handler.
-- [ impl ] - Add type hint to `server/start`.
-- [ impl ] - Handle nil :body.
-- [ session ] - Overwrite ring session data accordingly to spec.
-- [ session ] - Handle :recreate meta, unbind session on delete.
-- [ test ] - Add ring request tests.
-- [ test ] - Add ring response tests.
-- [ test ] - Add ring session tests.
-- [ test ] - Add server tests.
-- [ deps ] - Upgrade undertow 1.0.88, zmap 1.3.18.
+- \[ impl ] - Implement timeout for async ring handler.
+- \[ impl ] - Add type hint to `server/start`.
+- \[ impl ] - Handle nil :body.
+- \[ session ] - Overwrite ring session data accordingly to spec.
+- \[ session ] - Handle :recreate meta, unbind session on delete.
+- \[ test ] - Add ring request tests.
+- \[ test ] - Add ring response tests.
+- \[ test ] - Add ring session tests.
+- \[ test ] - Add server tests.
+- \[ deps ] - Upgrade undertow 1.0.88, zmap 1.3.18.
 
 ## `1.0.65-beta10`
 
