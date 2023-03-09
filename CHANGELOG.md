@@ -4,9 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## `1.0.94-SNAPSHOT`
+## `1.0.97-SNAPSHOT`
 
 Release date `UNRELEASED`
+
+
+
+## `1.0.96`
+
+Release date `2023-03-09`
 
 - (deps): Upgrade undertow "1.0.92", zmap "1.3.26".
 
