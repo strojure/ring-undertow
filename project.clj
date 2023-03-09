@@ -4,9 +4,9 @@
   :license {:name "The Unlicense" :url "https://unlicense.org"}
 
   :dependencies [;; Undertow server API.
-                 [com.github.strojure/undertow "1.0.88"]
+                 [com.github.strojure/undertow "1.0.92"]
                  ;; Lazy map for ring request.
-                 [com.github.strojure/zmap "1.3.18"]]
+                 [com.github.strojure/zmap "1.3.26"]]
 
   :profiles {:provided {:dependencies [[org.clojure/clojure "1.11.1"]]}
              :dev,,,,, {:dependencies [;; Competitor libraries
