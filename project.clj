@@ -4,7 +4,7 @@
   :license {:name "The Unlicense" :url "https://unlicense.org"}
 
   :dependencies [;; Undertow server API.
-                 [com.github.strojure/undertow "1.0.92"]
+                 [com.github.strojure/undertow "1.2.0-112"]
                  ;; Lazy map for ring request.
                  [com.github.strojure/zmap "1.3.26"]]
 
