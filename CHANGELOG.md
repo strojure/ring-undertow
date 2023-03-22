@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 Release date `UNRELEASED`
 
+- (deps feat): upgrade strojure/undertow "1.3.0-116"
+  - (feat session): use `HttpOnly` and `SameSite=Lax` in session cookie defaults
+
 ## `1.0.99`
 
 Release date `2023-03-21`
