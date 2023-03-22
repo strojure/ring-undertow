@@ -4,9 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## `1.0.100-SNAPSHOT`
+## `1.1.1-103-SNAPSHOT`
 
 Release date `UNRELEASED`
+
+## `1.1.0-102`
+
+Release date `2023-03-22`
 
 - (deps feat): upgrade strojure/undertow "1.3.0-116"
   - (feat session): use `HttpOnly` and `SameSite=Lax` in session cookie defaults
