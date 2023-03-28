@@ -4,9 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## `1.1.1-103-SNAPSHOT`
+## `1.1.2-106-SNAPSHOT`
 
 Release date `UNRELEASED`
+
+## `1.1.1-105`
+
+Release date `2023-03-28`
 
 - (deps): upgrade strojure/undertow "1.3.1-120"
   + (feat): generating CSP nonce changed from 18 to 16 bytes, URL encoded
