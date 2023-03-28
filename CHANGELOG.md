@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 Release date `UNRELEASED`
 
+- (deps): upgrade strojure/undertow "1.3.1-120"
+  + (feat): generating CSP nonce changed from 18 to 16 bytes, URL encoded
+
 ## `1.1.0-102`
 
 Release date `2023-03-22`
