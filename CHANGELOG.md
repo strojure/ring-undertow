@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 Release date `UNRELEASED`
 
+- (deps): upgrade strojure/undertow "1.4.0-125"
+
 ## `1.1.1-105`
 
 Release date `2023-03-28`
