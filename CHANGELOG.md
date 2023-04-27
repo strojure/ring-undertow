@@ -4,11 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## `1.1.2-106-SNAPSHOT`
+## `1.2.0-108-SNAPSHOT`
 
 Release date `UNRELEASED`
 
 - (deps): upgrade strojure/undertow "1.4.0-125"
+- (feat): dispatch async handler on SameThreadExecutor
 
 ## `1.1.1-105`
 

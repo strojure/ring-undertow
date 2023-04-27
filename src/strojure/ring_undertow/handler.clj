@@ -7,7 +7,7 @@
             [strojure.undertow.handler :as handler])
   (:import (clojure.lang MultiFn)
            (io.undertow.server HttpHandler)
-           (io.undertow.util WorkerUtils)
+           (io.undertow.util SameThreadExecutor WorkerUtils)
            (java.util.concurrent TimeUnit TimeoutException)))
 
 (set! *warn-on-reflection* true)
@@ -47,11 +47,11 @@
      (handleRequest [_ exchange]
        (let [timeout-task (^:once fn* [] (->> (str "Async ring response timeout: " timeout-ms " ms")
                                               (TimeoutException.)
-                                              (exchange/async-throw exchange)))
+                                              (exchange/throw-in exchange)))
              timeout-key (-> (.getIoThread exchange)
                              (WorkerUtils/executeAfter timeout-task timeout-ms
                                                        TimeUnit/MILLISECONDS))]
-         (exchange/async-dispatch exchange
+         (exchange/dispatching exchange SameThreadExecutor/INSTANCE
            (handler-fn (request/build-request exchange)
                        (fn handle-async [response]
                          ;; Handle response only before timeout
@@ -59,7 +59,7 @@
                            (response/handle-response response exchange)))
                        (fn handle-error [throwable]
                          (.remove timeout-key)
-                         (exchange/async-throw exchange throwable)))))))))
+                         (exchange/throw-in exchange throwable)))))))))
 
 ;;,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
